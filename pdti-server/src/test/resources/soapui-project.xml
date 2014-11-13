@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="ProviderInformationDirectoryService" resourceRoot="" soapui-version="4.6.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project activeEnvironment="Default" name="ProviderInformationDirectoryService" resourceRoot="" soapui-version="5.0.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
     <con:description>This SoapUI project utilizes the IHE WSDL, but the MSPD test data. The test suite names are identical  to the above HpdPlusProviderInformationDirectoryService test suites except for the removal of "_Plus" from the end of each. The test cases are identical to the above test cases, with the exception  that the two tests involving metadata (Unallowed_Metadata and Allowed_Metadata) are removed.</con:description><con:settings/>
     <con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="ProviderInformationDirectory_Port_SoapBinding" type="wsdl" bindingName="{urn:ihe:iti:hpd:2010}ProviderInformationDirectory_Port_SoapBinding" soapVersion="1_2" anonymous="optional" definition="${#Project#project.test.server.wsdl.url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <con:settings/>
@@ -391,7 +391,7 @@
     <con:testSuite name="ProviderInformationQueryRequestTestSuite">
         <con:description>Searches for each of the five object types: Provider, Organization, Membership, Service, and Credential.</con:description><con:settings/>
         <con:runType>SEQUENTIAL</con:runType>
-        <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="search_provider_by_name" searchProperties="true" id="c32cf9e5-f39b-4ab7-a71e-e1198c61ad97">
+        <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="search_provider_by_name" searchProperties="true" id="c32cf9e5-f39b-4ab7-a71e-e1198c61ad97">
             <con:settings/>
             <con:testStep type="request" name="search_provider_by_name">
                 <con:settings/>
@@ -407,7 +407,7 @@
                     <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="givenName">
                   <dsml:value>Thomas</dsml:value>
@@ -494,7 +494,7 @@ count(//dsml:attr)</path><content>26</content><allowWildcards>false</allowWildca
       </con:testStep>
       <con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="search_org_by_id" searchProperties="true" id="83868f79-29fc-45c8-a1e0-040ee822cd9a">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="search_org_by_id" searchProperties="true" id="83868f79-29fc-45c8-a1e0-040ee822cd9a">
       <con:description>Basic search for Organization by hpdOrgId attribute</con:description><con:settings/>
       <con:testStep type="request" name="search_org_by_id">
         <con:settings/>
@@ -510,7 +510,7 @@ count(//dsml:attr)</path><content>26</content><allowWildcards>false</allowWildca
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Organizations,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdOrgId">
                   <dsml:value>org1</dsml:value>
@@ -582,7 +582,7 @@ count(//dsml:attr)</path><content>19</content><allowWildcards>false</allowWildca
       </con:testStep>
       <con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="search_membership_by_provider" searchProperties="true" id="37d87fb5-6488-4405-87ae-ec293b1abd9a">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="search_membership_by_provider" searchProperties="true" id="37d87fb5-6488-4405-87ae-ec293b1abd9a">
       <con:description>Basic search for Membership by hpdHasAProvider attribute</con:description><con:settings/>
       <con:testStep type="request" name="search_membership_by_provider">
         <con:settings/>
@@ -601,7 +601,7 @@ count(//dsml:attr)</path><content>19</content><allowWildcards>false</allowWildca
          <dsml:searchRequest dn="ou=Memberships,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasAProvider">
-                  <dsml:value>HcIdentifier=provider1,ou=Providers,${#Project#project.test.server.dsml.dn.base}</dsml:value>
+                  <dsml:value>HcIdentifier=provider1,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <!--dsml:attributes>
@@ -652,7 +652,7 @@ count(//dsml:attr)</path><content>10</content><allowWildcards>false</allowWildca
       </con:testStep>
       <con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="search_service_by_id" searchProperties="true" id="97bf4c7b-4e40-42a9-a8c2-b4646c2d4593">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="search_service_by_id" searchProperties="true" id="97bf4c7b-4e40-42a9-a8c2-b4646c2d4593">
       <con:description>Basic search for Service by hpdServiceId attribute</con:description><con:settings/>
       <con:testStep type="request" name="search_service_by_id">
         <con:settings/>
@@ -714,7 +714,7 @@ count(//dsml:attr)</path><content>6</content><allowWildcards>false</allowWildcar
       </con:testStep>
       <con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="search_credential_by_id" searchProperties="true" id="e9222d91-45e5-45dd-bcab-356d80d22fd5">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="search_credential_by_id" searchProperties="true" id="e9222d91-45e5-45dd-bcab-356d80d22fd5">
       <con:description>Basic search for Credential by hpdCredentialId attribute</con:description><con:settings/>
       <con:testStep type="request" name="search_credential_by_id">
         <con:settings/>
@@ -790,7 +790,7 @@ count(//dsml:attr)</path><content>11</content><allowWildcards>false</allowWildca
     <con:description>Three workflows are from the Western States Consortium (WSC) and one from the EHR/HIE Interoperability Workgroup (IWG). The second WSC workflow happens to mirror the IWG workflow, so it was combined into one test case.</con:description><con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
     
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="WSC_1" searchProperties="true" id="9a0dd776-689d-4b7a-9f74-0847d5966d95">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="WSC_1" searchProperties="true" id="9a0dd776-689d-4b7a-9f74-0847d5966d95">
       <con:description>Search for a specific Provider, then find its Service.</con:description><con:settings/>
       
       
@@ -809,7 +809,7 @@ count(//dsml:attr)</path><content>11</content><allowWildcards>false</allowWildca
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="cn">
                   <dsml:value>John Smith</dsml:value>
@@ -897,7 +897,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
       </con:testStep><con:properties/>
     </con:testCase>
     
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="WSC_2_and_IWG" searchProperties="true" id="0ef955bf-5f0e-4fd2-9d8f-8020d7b0f40c">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="WSC_2_and_IWG" searchProperties="true" id="0ef955bf-5f0e-4fd2-9d8f-8020d7b0f40c">
       <con:description>Search for a specific Organization, then use Memberships to find all of its Providers, then find the Provider's Services.</con:description><con:settings/>
       <con:testStep type="request" name="search_org_by_id">
         <con:settings/>
@@ -913,7 +913,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Organizations,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdOrgId">
                   <dsml:value>org2</dsml:value>
@@ -979,7 +979,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
             <dsml:filter>
                <dsml:and>
                   <dsml:equalityMatch name="hpdHasAnOrg">
-                     <dsml:value>hpdOrgId=org2,ou=Organizations,${#Project#project.test.server.dsml.dn.base}</dsml:value>
+                     <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:present name="hpdHasAProvider"/>
                </dsml:and>
@@ -1031,7 +1031,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
                	<dsml:value>provider2</dsml:value>
@@ -1142,7 +1142,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
       </con:testStep>
       <con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="WSC_3" searchProperties="true" id="59bb8da9-6653-41cc-a53b-25feae4738a5">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="WSC_3" searchProperties="true" id="59bb8da9-6653-41cc-a53b-25feae4738a5">
       <con:description>Search for a specific Provider, then use Memberships to find its Organization, then find the Organization's Services.</con:description><con:settings/>
       <con:testStep type="request" name="search_provider_by_givenName_and_sn">
         <con:settings/>
@@ -1158,7 +1158,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="givenName">
                   <dsml:value>Thomas</dsml:value>
@@ -1236,7 +1236,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
          <dsml:searchRequest dn="ou=Memberships,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasAProvider">
-                  <dsml:value>HcIdentifier=provider1,ou=Providers,${#Project#project.test.server.dsml.dn.base}</dsml:value>
+                  <dsml:value>HcIdentifier=provider1,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
@@ -1278,7 +1278,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Organizations,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
                   <dsml:value>org1</dsml:value>
@@ -1362,7 +1362,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
       <con:properties/>
     </con:testCase><con:properties/>
   </con:testSuite>
-  <con:testSuite name="Message_Compliance"><con:description>Test cases for elements outside of the data model</con:description><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="RequestIDs_Equal" searchProperties="true" id="7630e26d-c4fe-4b96-800f-672e70358c3c"><con:description>Asserts that the attribute requestID sent in with the request is identical to the one sent back in the response.</con:description><con:settings/><con:testStep type="request" name="RequestIDs_Equal">
+  <con:testSuite name="Message_Compliance"><con:description>Test cases for elements outside of the data model</con:description><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="RequestIDs_Equal" searchProperties="true" id="7630e26d-c4fe-4b96-800f-672e70358c3c"><con:description>Asserts that the attribute requestID sent in with the request is identical to the one sent back in the response.</con:description><con:settings/><con:testStep type="request" name="RequestIDs_Equal">
                 <con:settings/>
                 <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <con:interface>ProviderInformationDirectory_Port_SoapBinding</con:interface>
@@ -1376,7 +1376,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
                     <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="givenName">
                   <dsml:value>Thomas</dsml:value>
@@ -1449,7 +1449,7 @@ for (i in responseIDs){
   <con:testSuite name="Error">
         <con:description>Error test cases. These test cases utilize special requestIDs that are recognized by the MSPD Test Implementation and induce these errors in a special manner.</con:description><con:settings/>
         <con:runType>SEQUENTIAL</con:runType>
-        <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="dup_req_id_test" searchProperties="true" id="d32cf9e5-f39b-4ab7-a71e-e1198c61ad97">
+        <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="dup_req_id_test" searchProperties="true" id="d32cf9e5-f39b-4ab7-a71e-e1198c61ad97">
             <con:description>Duplicate requestIDs sent.</con:description><con:settings/>
             <con:testStep type="request" name="dup_req_id_test_1">
                 <con:settings/>
@@ -1465,7 +1465,7 @@ for (i in responseIDs){
                     <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:present name="uid"/>
             </dsml:filter>
@@ -1507,7 +1507,7 @@ for (i in responseIDs){
                     <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:present name="uid"/>
             </dsml:filter>
@@ -1544,7 +1544,7 @@ assert(response["//dsml:errorResponse/dsml:message/text()"].join("\n").contains(
       </con:testStep>
       <con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="dup_req_id_federation_loop_test" searchProperties="true" id="c32cf9e5-f39b-4ab7-a71e-e1198c61ad97">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="dup_req_id_federation_loop_test" searchProperties="true" id="c32cf9e5-f39b-4ab7-a71e-e1198c61ad97">
             <con:description>A federation loop is induced.</con:description><con:settings/>
             <con:testStep type="request" name="dup_req_id_federation_loop_test">
                 <con:settings/>
@@ -1560,7 +1560,7 @@ assert(response["//dsml:errorResponse/dsml:message/text()"].join("\n").contains(
                     <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:present name="uid"/>
             </dsml:filter>
@@ -1600,7 +1600,7 @@ assert(response["//dsml:errorResponse/dsml:message/text()"].join("\n").contains(
    <con:properties/></con:testSuite><con:testSuite name="SI_Use_Cases">
     <con:description>See the &lt;a href="http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf">S&amp;I Query and Response use cases&lt;/a> for details about these test cases. Two test cases, Find Unique Individual and Find Unique Organization, were intentionally omitted.</con:description><con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Find_Individual" searchProperties="true" id="c46d6e17-f483-46d2-babc-4d5bff7cfe86">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Individual" searchProperties="true" id="c46d6e17-f483-46d2-babc-4d5bff7cfe86">
       <con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
 Request a list of individuals by specifying one or more individual attributes.</con:description><con:settings/>
       
@@ -1618,7 +1618,7 @@ Request a list of individuals by specifying one or more individual attributes.</
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:and>
                   <dsml:equalityMatch name="givenName">
@@ -1642,7 +1642,7 @@ Request a list of individuals by specifying one or more individual attributes.</
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -1652,7 +1652,7 @@ Request a list of individuals by specifying one or more individual attributes.</
         </con:config>
       </con:testStep><con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Find_Unique_Individual" searchProperties="true" id="1ef5eb2d-a39c-4235-9535-960318854fb7"><con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Unique_Individual" searchProperties="true" id="1ef5eb2d-a39c-4235-9535-960318854fb7"><con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
 Request a specific individual by specifying the individual unique reference ID.</con:description><con:settings/><con:testStep type="request" name="search_provider_by_HcIdentifier">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1667,7 +1667,7 @@ Request a specific individual by specifying the individual unique reference ID.<
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
                   <dsml:value>provider3</dsml:value>
@@ -1723,7 +1723,7 @@ Request a specific individual by specifying the individual unique reference ID.<
           </con:request>
         </con:config>
       </con:testStep><con:properties/></con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Find_Organization" searchProperties="true" id="e707b458-4594-460d-ba73-2fb17d38366f">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Organization" searchProperties="true" id="e707b458-4594-460d-ba73-2fb17d38366f">
       <con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
 Request a list of organizations and relationships to other organizations by specifying one or more 
 organization attributes.</con:description><con:settings/>
@@ -1741,7 +1741,7 @@ organization attributes.</con:description><con:settings/>
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Organizations,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="o">
                   <dsml:value>Northside Hospital Maternity Unit</dsml:value>
@@ -1807,7 +1807,7 @@ organization attributes.</con:description><con:settings/>
             <dsml:filter>
                <dsml:and>
                   <dsml:equalityMatch name="hpdHasAnOrg">
-                     <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:present name="hpdHasASubOrg"/>
                </dsml:and>
@@ -1862,7 +1862,7 @@ organization attributes.</con:description><con:settings/>
          <dsml:searchRequest dn="ou=Memberships,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasASubOrg">
-                  <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                  <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
@@ -1900,7 +1900,7 @@ organization attributes.</con:description><con:settings/>
         </con:config>
       </con:testStep><con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Find_Unique_Organization" searchProperties="true" id="eca963ed-a928-4e70-97ad-a72d53de92d9"><con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Unique_Organization" searchProperties="true" id="eca963ed-a928-4e70-97ad-a72d53de92d9"><con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
 Request a specific organization and relationships to other organizations by specifying the 
 organization unique reference ID.</con:description><con:settings/><con:testStep type="request" name="search_org_by_HcIdentifier">
         <con:settings/>
@@ -1916,7 +1916,7 @@ organization unique reference ID.</con:description><con:settings/><con:testStep 
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Organizations,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
                   <dsml:value>org4</dsml:value>
@@ -1981,7 +1981,7 @@ organization unique reference ID.</con:description><con:settings/><con:testStep 
             <dsml:filter>
                <dsml:and>
                   <dsml:equalityMatch name="hpdHasAnOrg">
-                     <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:present name="hpdHasASubOrg"/>
                </dsml:and>
@@ -2036,7 +2036,7 @@ organization unique reference ID.</con:description><con:settings/><con:testStep 
          <dsml:searchRequest dn="ou=Memberships,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasASubOrg">
-                  <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                  <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
@@ -2073,7 +2073,7 @@ organization unique reference ID.</con:description><con:settings/><con:testStep 
           </con:request>
         </con:config>
       </con:testStep><con:properties/></con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Find_Organizations_for_Unique_Individual" searchProperties="true" id="1845cacc-7317-4c03-8c99-10cd886a3592">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Organizations_for_Unique_Individual" searchProperties="true" id="1845cacc-7317-4c03-8c99-10cd886a3592">
       <con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
 Request a specific individual and related organizations by specifying an individual unique 
 reference ID and one or more attributes of organizations. Organizations and relationships to the 
@@ -2095,7 +2095,7 @@ relationships are returned.</con:description><con:settings/>
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
                   <dsml:value>provider3</dsml:value>
@@ -2167,7 +2167,7 @@ relationships are returned.</con:description><con:settings/>
          <dsml:searchRequest dn="ou=Memberships,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasAProvider">
-                  <dsml:value>HcIdentifier=provider3,ou=Providers,${#Project#project.test.server.dsml.dn.base}</dsml:value>
+                  <dsml:value>HcIdentifier=provider3,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
@@ -2222,10 +2222,10 @@ relationships are returned.</con:description><con:settings/>
                <dsml:and>
                   <dsml:or>
                      <dsml:equalityMatch name="hpdHasAnOrg">
-                        <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                        <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                      </dsml:equalityMatch>
                      <dsml:equalityMatch name="hpdHasAnOrg">
-                        <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                        <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                      </dsml:equalityMatch>
                   </dsml:or>
                   <dsml:present name="hpdHasASubOrg"/>
@@ -2282,10 +2282,10 @@ relationships are returned.</con:description><con:settings/>
             <dsml:filter>
                <dsml:or>
                   <dsml:equalityMatch name="hpdHasASubOrg">
-                     <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:equalityMatch name="hpdHasASubOrg">
-                     <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                </dsml:or>
             </dsml:filter>
@@ -2324,7 +2324,7 @@ relationships are returned.</con:description><con:settings/>
         </con:config>
       </con:testStep><con:properties/>
     </con:testCase>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Find_Individuals_for_Unique_Organization" searchProperties="true" id="42cf1506-3027-46fa-9cb9-a6bca9e08454">
+    <con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Individuals_for_Unique_Organization" searchProperties="true" id="42cf1506-3027-46fa-9cb9-a6bca9e08454">
       <con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
 Request a specific organization and related individuals by specifying an organization unique 
 reference ID and one or more attributes of individuals. Individuals and relationships to the 
@@ -2346,7 +2346,7 @@ relationships are returned.</con:description><con:settings/>
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Organizations,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
                   <dsml:value>org2</dsml:value>
@@ -2411,7 +2411,7 @@ relationships are returned.</con:description><con:settings/>
             <dsml:filter>
                <dsml:and>
                   <dsml:equalityMatch name="hpdHasAnOrg">
-                     <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:present name="hpdHasASubOrg"/>
                </dsml:and>
@@ -2466,7 +2466,7 @@ relationships are returned.</con:description><con:settings/>
          <dsml:searchRequest dn="ou=Memberships,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasASubOrg">
-                  <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                  <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
@@ -2520,7 +2520,7 @@ relationships are returned.</con:description><con:settings/>
             <dsml:filter>
                <dsml:and>
                   <dsml:equalityMatch name="hpdHasAnOrg">
-                     <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:present name="hpdHasAProvider"/>
                </dsml:and>
@@ -2572,7 +2572,7 @@ relationships are returned.</con:description><con:settings/>
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:or>
                   <dsml:equalityMatch name="HcIdentifier">
@@ -2633,7 +2633,7 @@ relationships are returned.</con:description><con:settings/>
           </con:request>
         </con:config>
       </con:testStep><con:properties/>
-    </con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Find_Individuals_and_Organizations" searchProperties="true" id="a3d93523-29a7-451b-825d-ef3b42890bbf">
+    </con:testCase><con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Individuals_and_Organizations" searchProperties="true" id="a3d93523-29a7-451b-825d-ef3b42890bbf">
       <con:description>From http://wiki.siframework.org/file/view/ESI%20Query%20and%20Response.pdf
 Request a list of individuals, organizations and relationships between (individuals/organizations or 
 organization/organization) based on attributes of individuals, organizations, and 
@@ -2658,7 +2658,7 @@ other organizations are returned. </con:description><con:settings/>
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Providers,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="givenName">
                   <dsml:value>John</dsml:value>
@@ -2727,7 +2727,7 @@ other organizations are returned. </con:description><con:settings/>
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
    <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-         <dsml:searchRequest dn="ou=Organizations,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+         <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:or>
                   <dsml:equalityMatch name="HcIdentifier">
@@ -2798,10 +2798,10 @@ other organizations are returned. </con:description><con:settings/>
                <dsml:and>
                   <dsml:or>
                      <dsml:equalityMatch name="hpdHasAnOrg">
-                        <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                        <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                      </dsml:equalityMatch>
                      <dsml:equalityMatch name="hpdHasAnOrg">
-                        <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                        <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                      </dsml:equalityMatch>
                   </dsml:or>
                   <dsml:present name="hpdHasASubOrg"/>
@@ -2858,10 +2858,10 @@ other organizations are returned. </con:description><con:settings/>
             <dsml:filter>
                <dsml:or>
                   <dsml:equalityMatch name="hpdHasASubOrg">
-                     <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:equalityMatch name="hpdHasASubOrg">
-                     <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                </dsml:or>
             </dsml:filter>
@@ -2917,14 +2917,14 @@ other organizations are returned. </con:description><con:settings/>
                <dsml:and>
                   <dsml:or>
                      <dsml:equalityMatch name="hpdHasAnOrg">
-                        <dsml:value>hpdOrgId=org2,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                        <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                      </dsml:equalityMatch>
                      <dsml:equalityMatch name="hpdHasAnOrg">
-                        <dsml:value>hpdOrgId=org4,ou=Organizations,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                        <dsml:value>hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                      </dsml:equalityMatch>
                   </dsml:or>
                   <dsml:equalityMatch name="hpdHasAProvider">
-                     <dsml:value>HcIdentifier=provider2,ou=Providers,${#Project#project.test.server.dsml.dn.base}</dsml:value>
+                     <dsml:value>HcIdentifier=provider2,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                   </dsml:equalityMatch>
                </dsml:and>
             </dsml:filter>
@@ -2966,5 +2966,5 @@ other organizations are returned. </con:description><con:settings/>
   </con:testSuite>
     
       <con:properties><con:property><con:name>project.test.server.wsdl.url</con:name><con:value>http://localhost:8080/pdti-server/ProviderInformationDirectoryService?wsdl</con:value></con:property><con:property><con:name>project.test.server.dsml.dn.base</con:name><con:value>o=dev.provider-directories.com,dc=hpd</con:value></con:property></con:properties><con:wssContainer/>
-  <con:sensitiveInformation/>
+  <con:oAuth2ProfileContainer/><con:sensitiveInformation/>
 </con:soapui-project>
