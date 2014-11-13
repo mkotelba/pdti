@@ -10,4 +10,19 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!-- Intentionally left empty (no default federation configuration) -->
+	<beans:bean id="federatedDirTest1" class="gov.hhs.onc.pdti.data.impl.DirectoryDescriptorImpl" parent="federatedDir"
+        p:directoryId="pdti-hpd-dir_#{ new java.util.Date().time }"
+        p:baseDn="o=dev.provider-directories.com,dc=hpd"
+        p:wsdlLocation="http://54.200.55.97/pdti-server/ProviderInformationDirectoryService?wsdl">
+        <beans:qualifier type="gov.hhs.onc.pdti.DirectoryStandard" value="IHE"/>
+        <beans:qualifier type="gov.hhs.onc.pdti.DirectoryType" value="FEDERATED"/>
+    </beans:bean>
+    
+    <beans:bean id="hpdPlusFederatedDirTest1" class="gov.hhs.onc.pdti.data.impl.DirectoryDescriptorImpl" parent="federatedDir"
+        p:directoryId="pdti-hpdplus-dir_#{ new java.util.Date().time }"
+        p:baseDn="o=dev.provider-directories.com,dc=hpd"
+        p:wsdlLocation="http://54.200.55.97/pdti-server/Hpd_Plus_ProviderInformationDirectoryService?wsdl">
+        <beans:qualifier type="gov.hhs.onc.pdti.DirectoryStandard" value="HPD_PLUS_PROPOSED"/>
+        <beans:qualifier type="gov.hhs.onc.pdti.DirectoryType" value="FEDERATED"/>
+    </beans:bean>
 </beans:beans>

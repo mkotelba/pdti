@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="HpdPlusProviderInformationDirectoryService" resourceRoot="" soapui-version="4.6.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project activeEnvironment="Default" name="HpdPlusProviderInformationDirectoryService" resourceRoot="" soapui-version="5.0.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
   <con:description>This SoapUI project utilizes the MSPD WSDL and test data.</con:description><con:settings/>
   <con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="Hpd_Plus_ProviderInformationDirectory_Port_SoapBinding" type="wsdl" bindingName="{urn:gov:hhs:onc:hpdplus:2013}Hpd_Plus_ProviderInformationDirectory_Port_SoapBinding" soapVersion="1_2" anonymous="optional" definition="${#Project#project.test.server.wsdl.url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
@@ -585,7 +585,7 @@ count(//dsml:attr)</path><content>26</content><allowWildcards>false</allowWildca
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -3337,5 +3337,5 @@ other organizations are returned. </con:description><con:settings/>
   </con:testSuite>
     
       <con:properties><con:property><con:name>project.test.server.wsdl.url</con:name><con:value>http://localhost:8080/pdti-server/Hpd_Plus_ProviderInformationDirectoryService?wsdl</con:value></con:property><con:property><con:name>project.test.server.dsml.dn.base</con:name><con:value>o=dev.provider-directories.com,dc=hpd</con:value></con:property></con:properties><con:wssContainer/>
-  <con:sensitiveInformation/>
+  <con:oAuth2ProfileContainer/><con:sensitiveInformation/>
 </con:soapui-project>

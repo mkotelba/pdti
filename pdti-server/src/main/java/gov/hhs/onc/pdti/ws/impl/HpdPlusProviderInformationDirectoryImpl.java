@@ -11,6 +11,7 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import javax.xml.ws.soap.Addressing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service("hpdPlusProviderInfoDir")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @WebService(portName = "Hpd_Plus_ProviderInformationDirectory_Port_Soap", serviceName = "Hpd_Plus_ProviderInformationDirectory_Service", targetNamespace = "urn:gov:hhs:onc:hpdplus:2013")
+@Addressing
 public class HpdPlusProviderInformationDirectoryImpl extends AbstractProviderInformationDirectory<HpdPlusRequest, HpdPlusResponse> implements
         HpdPlusProviderInformationDirectoryPortType {
     @Override
