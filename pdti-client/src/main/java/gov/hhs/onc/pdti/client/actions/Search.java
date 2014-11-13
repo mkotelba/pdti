@@ -34,6 +34,12 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
+import gov.hhs.onc.pdti.ws.api.Control;
+import gov.hhs.onc.pdti.client.federation.xml.FederatedRequestData;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -50,8 +56,8 @@ public class Search extends BaseAction implements ServletRequestAware {
     private static final String PERIOD = ".";
     private static final String JAXB_TYPE_ERROR_MESSAGE_PREAMBLE = "Unknown JAXBElement value: ";
     private static final String PD_TYPE_ERROR_MESSAGE_PREAMBLE = "Unknown Provider Directory type: ";
-    private static final String HPDPLUS_RESPONSE_ITEM_TYPE_ERROR_MESSAGE_PREAMBLE =
-            "Unknown HPDPlus response item type: ";
+    private static final String HPDPLUS_RESPONSE_ITEM_TYPE_ERROR_MESSAGE_PREAMBLE
+            = "Unknown HPDPlus response item type: ";
     private static final String SEARCH_ATTRIBUTE_PARAM_NAME = "searchAttribute";
     private static final String SEARCH_STRING_PARAM_NAME = "searchString";
     private static final String REQUIRED_FIELD_MESSAGE = "This field is required.";
@@ -61,13 +67,13 @@ public class Search extends BaseAction implements ServletRequestAware {
     private final String defaultUrl = getText(WSDL_PROPERTY_NAME);
 
     private gov.hhs.onc.pdti.ws.api.ObjectFactory dsmlBasedObjectFactory = new gov.hhs.onc.pdti.ws.api.ObjectFactory();
-    private gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory hpdPlusObjectFactory =
-            new gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory();
+    private gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory hpdPlusObjectFactory
+            = new gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory();
 
     private String url;
     private String providerDirectoryType;
     private String requestId;
-    private String typeToSearch;
+    private String textDN;
     private String searchAttribute;
     private String searchString;
     private String[] attributesToRetrieve;
@@ -85,15 +91,13 @@ public class Search extends BaseAction implements ServletRequestAware {
     }
 
     @Validations(requiredFields = {
-            @RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = SEARCH_ATTRIBUTE_PARAM_NAME, message = REQUIRED_FIELD_MESSAGE),
-            @RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = SEARCH_STRING_PARAM_NAME, message = REQUIRED_FIELD_MESSAGE) })
+        @RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = SEARCH_ATTRIBUTE_PARAM_NAME, message = REQUIRED_FIELD_MESSAGE),
+        @RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = SEARCH_STRING_PARAM_NAME, message = REQUIRED_FIELD_MESSAGE)})
     public String execute() {
         LOGGER.debug("execute() called...");
         LOGGER.debug("url =" + url + "=");
-        LOGGER.debug("showDetails =" + showDetails + "=");
-        LOGGER.debug("requestId =" + requestId + "=");
         URL wsdlUrl = null;
-
+        requestId = UUID.randomUUID().toString();
         try {
             if (!StringUtils.isEmpty(url)) {
                 wsdlUrl = new URL(url);
@@ -101,12 +105,13 @@ public class Search extends BaseAction implements ServletRequestAware {
                 String baseUrl = "http://" + req.getServerName() + ":" + req.getServerPort() + ProviderDirectoryTypes.getUrl(providerDirectoryType);
                 wsdlUrl = new URL(baseUrl);
             }
+
             LOGGER.debug("wsdlUrl = " + wsdlUrl);
         } catch (MalformedURLException malformedURLException) {
             getSearchErrorMessages().add(malformedURLException.getMessage());
             LOGGER.error(malformedURLException);
             return ERROR;
-        } 
+        }
 
         if (providerDirectoryType.equals(ProviderDirectoryTypes.DSML_WSDL.toString())) {
             doDsmlSearch(wsdlUrl);
@@ -130,29 +135,29 @@ public class Search extends BaseAction implements ServletRequestAware {
 
     private void doHpdPlusSearch(URL wsdlUrl) {
         LOGGER.debug("doHpdPlusSearch(URL)");
-        HpdPlusProviderInformationDirectoryService hpdPlusProviderInformationDirectoryService =
-                new HpdPlusProviderInformationDirectoryService(wsdlUrl);
+        HpdPlusProviderInformationDirectoryService hpdPlusProviderInformationDirectoryService
+                = new HpdPlusProviderInformationDirectoryService(wsdlUrl);
         HpdPlusResponse hpdPlusResponse = hpdPlusProviderInformationDirectoryService
                 .getHpdPlusProviderInformationDirectoryPortSoap()
                 .hpdPlusProviderInformationQueryRequest(buildHpdPlusRequest());
         hpdPlusResponse.setDirectoryUri(wsdlUrl.toString());
         processHpdPlusResponse(hpdPlusResponse);
     }
-    
+
     private void processHpdPlusResponse(HpdPlusResponse hpdPlusResponse) {
         LOGGER.debug("processHpdPlusResponse(HpdPlusResponse)");
         List<HpdPlusError> hpdPlusErrors = hpdPlusResponse.getErrors();
-        if(null != hpdPlusErrors && hpdPlusErrors.size() > 0) {
-            for(HpdPlusError hpdPlusError : hpdPlusErrors) {
+        if (null != hpdPlusErrors && hpdPlusErrors.size() > 0) {
+            for (HpdPlusError hpdPlusError : hpdPlusErrors) {
                 searchErrorMessages.add(hpdPlusError.getMessage());
             }
         }
         List<Object> responseItems = hpdPlusResponse.getResponseItems();
-        for(Object object : responseItems) {
-            if(object instanceof BatchResponse) {
-                processBatchResponse(hpdPlusResponse.getDirectoryId(), hpdPlusResponse.getDirectoryUri(), (BatchResponse)object);
-            } else if(object instanceof HpdPlusResponse) {
-                processHpdPlusResponse((HpdPlusResponse)object);
+        for (Object object : responseItems) {
+            if (object instanceof BatchResponse) {
+                processBatchResponse(hpdPlusResponse.getDirectoryId(), hpdPlusResponse.getDirectoryUri(), (BatchResponse) object);
+            } else if (object instanceof HpdPlusResponse) {
+                processHpdPlusResponse((HpdPlusResponse) object);
             } else {
                 searchErrorMessages.add(
                         HPDPLUS_RESPONSE_ITEM_TYPE_ERROR_MESSAGE_PREAMBLE + object.getClass().getName());
@@ -163,7 +168,7 @@ public class Search extends BaseAction implements ServletRequestAware {
     private HpdPlusRequest buildHpdPlusRequest() {
         LOGGER.debug("buildHpdPlusRequest()");
         HpdPlusRequest hpdPlusRequest = hpdPlusObjectFactory.createHpdPlusRequest();
-        if(Boolean.TRUE.equals(isShowDetails())) {
+        if (Boolean.TRUE.equals(isShowDetails())) {
             hpdPlusRequest.setRequestId(UUID.randomUUID().toString());
         } else {
             hpdPlusRequest.setRequestId(requestId);
@@ -175,8 +180,8 @@ public class Search extends BaseAction implements ServletRequestAware {
 
     private void doDsmlSearch(URL wsdlUrl) {
         LOGGER.debug("doDsmlSearch(URL)");
-        ProviderInformationDirectoryService providerInformationDirectoryService =
-                new ProviderInformationDirectoryService(wsdlUrl);
+        ProviderInformationDirectoryService providerInformationDirectoryService
+                = new ProviderInformationDirectoryService(wsdlUrl);
         BatchResponse batchResponse = providerInformationDirectoryService.getProviderInformationDirectoryPortSoap()
                 .providerInformationQueryRequest(buildBatchRequest(false));
         List<JAXBElement<?>> batchResponseJAXBElements = batchResponse.getBatchResponses();
@@ -199,7 +204,7 @@ public class Search extends BaseAction implements ServletRequestAware {
             }
         }
     }
-    
+
     private void processBatchResponse(String directoryId, String directoryUri, BatchResponse batchResponse) {
         LOGGER.debug("processBatchResponse(BatchRespons)");
         List<JAXBElement<?>> batchResponseJAXBElements = batchResponse.getBatchResponses();
@@ -227,13 +232,23 @@ public class Search extends BaseAction implements ServletRequestAware {
         LOGGER.debug("buildBatchRequest()");
         BatchRequest batchRequest = dsmlBasedObjectFactory.createBatchRequest();
         SearchRequest searchRequest = dsmlBasedObjectFactory.createSearchRequest();
-        if(!isHpdPlusRequest) {
+        if (!isHpdPlusRequest) {
             if (!StringUtils.isEmpty(requestId)) {
                 batchRequest.setRequestId(requestId);
                 searchRequest.setRequestId(requestId);
             }
         }
-        searchRequest.setDn(OU + typeToSearch + COMMA + getText(DN));
+
+        Control ctrl = new Control();
+        ctrl.setType("1.2.3.4.5");
+        ctrl.setCriticality(false);
+        FederatedRequestData reqData = new FederatedRequestData();
+        reqData.setFederatedRequestId("12345");
+        ctrl.setControlValue(this.convertToBytes(reqData));
+        searchRequest.getControl().clear();
+        searchRequest.getControl().add(ctrl);
+        //searchRequest.setDn(OU + typeToSearch + COMMA + getText(DN));
+        searchRequest.setDn(textDN);
         searchRequest.setScope(SINGLE_LEVEL);
         searchRequest.setDerefAliases(DEREF_FINDING_BASE_OBJ);
         Filter filter = dsmlBasedObjectFactory.createFilter();
@@ -241,13 +256,6 @@ public class Search extends BaseAction implements ServletRequestAware {
         attributeValueAssertion.setName(searchAttribute);
         attributeValueAssertion.setValue(searchString);
         filter.setEqualityMatch(attributeValueAssertion);
-        // AttributeDescriptions attributeDescriptions = dsmlBasedObjectFactory.createAttributeDescriptions();
-        // for (String attribute : attributesToRetrieve) {
-        // AttributeDescription attributeDescription = dsmlBasedObjectFactory.createAttributeDescription();
-        // attributeDescription.setName(attribute);
-        // attributeDescriptions.getAttribute().add(attributeDescription);
-        // }
-        // searchRequest.setAttributes(attributeDescriptions);
         searchRequest.setFilter(filter);
         batchRequest.getBatchRequests().add(searchRequest);
         return batchRequest;
@@ -288,20 +296,12 @@ public class Search extends BaseAction implements ServletRequestAware {
         searchResults = ArrayUtils.addAll(searchResults, newSearchResults);
     }
 
-    public void setTypeToSearch(String typeToSearch) {
-        this.typeToSearch = typeToSearch;
-    }
-
     public void setSearchAttribute(String searchAttribute) {
         this.searchAttribute = searchAttribute;
     }
 
     public void setSearchString(String searchString) {
         this.searchString = searchString;
-    }
-
-    public String getTypeToSearch() {
-        return typeToSearch;
     }
 
     public String getSearchAttribute() {
@@ -375,9 +375,38 @@ public class Search extends BaseAction implements ServletRequestAware {
     public void setProviderDirectoryType(String providerDirectoryType) {
         this.providerDirectoryType = providerDirectoryType;
     }
-    
+
     public String getDefaultUrl() {
         return defaultUrl;
+    }
+
+    public String getTextDN() {
+        return textDN;
+    }
+
+    public void setTextDN(String textDN) {
+        this.textDN = textDN;
+    }
+
+    /**
+     *
+     * @param reqData
+     * @return byte
+     */
+    private byte[] convertToBytes(FederatedRequestData reqData) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        OutputStream mout;
+        ObjectOutputStream out;
+        try {
+            mout = MimeUtility.encode(bos, "base64");
+            out = new ObjectOutputStream(mout);
+            out.writeObject(reqData);
+            out.flush();
+        } catch (Exception ex) {
+            LOGGER.error(ex);
+        }
+        byte[] bytes = bos.toByteArray();
+        return bytes;
     }
 
 }

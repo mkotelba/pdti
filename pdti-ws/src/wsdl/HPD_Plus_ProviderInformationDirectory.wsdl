@@ -26,8 +26,8 @@
     </wsdl:message>
     <wsdl:portType name="Hpd_Plus_ProviderInformationDirectory_PortType">
         <wsdl:operation name="Hpd_Plus_ProviderInformationQueryRequest">
-            <wsdl:input message="hpdplus:Hpd_Plus_ProviderInformationQueryRequestMessage"/>
-            <wsdl:output message="hpdplus:Hpd_Plus_ProviderInformationQueryResponseMessage"/>
+            <wsdl:input message="hpdplus:Hpd_Plus_ProviderInformationQueryRequestMessage" name="queryRequest"/>
+            <wsdl:output message="hpdplus:Hpd_Plus_ProviderInformationQueryResponseMessage" name="queryResponse"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="Hpd_Plus_ProviderInformationDirectory_Binding" type="hpdplus:Hpd_Plus_ProviderInformationDirectory_PortType">

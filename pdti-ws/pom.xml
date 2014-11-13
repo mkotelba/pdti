@@ -95,6 +95,7 @@
             <plugin>
                 <groupId>org.jvnet.jax-ws-commons</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.2</version>
                 <executions>
                     <execution>
                         <id>wsimport</id>
@@ -121,7 +122,7 @@
                         <goals>
                             <goal>wsimport</goal>
                         </goals>
-                        <configuration>
+                        <configuration>                      
                             <bindingFiles>
                                 <bindingFile>global.xjb</bindingFile>
                                 <bindingFile>DSMLv2.xjb</bindingFile>

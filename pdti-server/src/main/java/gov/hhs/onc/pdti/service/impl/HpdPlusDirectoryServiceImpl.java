@@ -1,6 +1,5 @@
 package gov.hhs.onc.pdti.service.impl;
 
-
 import gov.hhs.onc.pdti.DirectoryStandard;
 import gov.hhs.onc.pdti.DirectoryStandardId;
 import gov.hhs.onc.pdti.DirectoryType;
@@ -13,6 +12,9 @@ import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorNoOpException;
 import gov.hhs.onc.pdti.interceptor.DirectoryRequestInterceptor;
 import gov.hhs.onc.pdti.interceptor.DirectoryResponseInterceptor;
 import gov.hhs.onc.pdti.service.DirectoryService;
+import gov.hhs.onc.pdti.statistics.entity.PDTIStatisticsEntity;
+import gov.hhs.onc.pdti.statistics.service.PdtiAuditLog;
+import gov.hhs.onc.pdti.statistics.service.impl.PdtiAuditLogImpl;
 import gov.hhs.onc.pdti.util.DirectoryUtils;
 import gov.hhs.onc.pdti.ws.api.BatchRequest;
 import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusErrorType;
@@ -24,6 +26,7 @@ import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusRequestMetadata;
 import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusResponse;
 import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusResponseMetadata;
 import gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory;
+import java.util.Date;
 import java.util.SortedSet;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,7 @@ import org.springframework.stereotype.Service;
 @Service("hpdPlusDirService")
 public class HpdPlusDirectoryServiceImpl extends AbstractDirectoryService<HpdPlusRequest, HpdPlusResponse> implements
         DirectoryService<HpdPlusRequest, HpdPlusResponse> {
+
     private final static Logger LOGGER = Logger.getLogger(HpdPlusDirectoryServiceImpl.class);
 
     @Autowired
@@ -49,7 +53,10 @@ public class HpdPlusDirectoryServiceImpl extends AbstractDirectoryService<HpdPlu
         HpdPlusRequestMetadata reqMeta = hpdPlusReq.getRequestMetadata();
         HpdPlusResponse hpdPlusResp = this.hpdPlusObjectFactory.createHpdPlusResponse();
         DirectoryInterceptorNoOpException noOpException = null;
-
+        PDTIStatisticsEntity entity = new PDTIStatisticsEntity();
+        entity.setBaseDn(dirId);
+        entity.setCreationDate(new Date());
+        entity.setPdRequestType("HpdPlusRequest");
         try {
             this.interceptRequests(dirDesc, dirId, reqId, hpdPlusReq, hpdPlusResp);
         } catch (DirectoryInterceptorNoOpException e) {
@@ -116,7 +123,13 @@ public class HpdPlusDirectoryServiceImpl extends AbstractDirectoryService<HpdPlu
         } catch (XmlMappingException e) {
             this.addError(dirId, reqId, hpdPlusResp, e);
         }
-
+        if (null != hpdPlusResp && null != hpdPlusResp.getErrors() && hpdPlusResp.getErrors().size() > 0) {
+            entity.setStatus("Error");
+        } else {
+            entity.setStatus("Success");
+        }
+        PdtiAuditLog pdtiAuditLogService = PdtiAuditLogImpl.getInstance();
+        pdtiAuditLogService.save(entity);
         return hpdPlusResp;
     }
 
