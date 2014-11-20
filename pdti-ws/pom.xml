@@ -116,25 +116,6 @@
                             <wsdlLocation>META-INF/wsdl/HPD_ProviderInformationDirectory.wsdl</wsdlLocation>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>wsimport-hpdplus</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                        <configuration>                      
-                            <bindingFiles>
-                                <bindingFile>global.xjb</bindingFile>
-                                <bindingFile>DSMLv2.xjb</bindingFile>
-                                <bindingFile>HPD_Plus.xjb</bindingFile>
-                                <bindingFile>HPD_Plus_ProviderInformationDirectory.xjb</bindingFile>
-                            </bindingFiles>
-                            <wsdlFiles>
-                                <wsdlFile>HPD_Plus_ProviderInformationDirectory.wsdl</wsdlFile>
-                            </wsdlFiles>
-                            <wsdlLocation>META-INF/wsdl/HPD_Plus_ProviderInformationDirectory.wsdl</wsdlLocation>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>

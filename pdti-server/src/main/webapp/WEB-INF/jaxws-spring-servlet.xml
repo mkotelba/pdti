@@ -46,14 +46,11 @@
     <beans:bean id="objectFactory" class="gov.hhs.onc.pdti.ws.api.ObjectFactory">
         <beans:qualifier type="gov.hhs.onc.pdti.DirectoryStandard" value="IHE"/>
     </beans:bean>
-    <beans:bean id="hpdPlusObjectFactory" class="gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory">
-        <beans:qualifier type="gov.hhs.onc.pdti.DirectoryStandard" value="HPD_PLUS_PROPOSED"/>
-    </beans:bean>
     
     <!-- Defining custom JAXB v2 marshaller -->
     <beans:bean id="dirJaxb2Marshaller" class="gov.hhs.onc.pdti.jaxb.impl.DirectoryJaxb2MarshallerImpl"
         p:checkForXmlRootElement="false"
-        p:contextPackages="#{ { objectFactory.class.package, hpdPlusObjectFactory.class.package } }">
+        p:contextPackages="#{ { objectFactory.class.package } }">
         <beans:property name="marshallerProperties">
             <util:map>
                 <beans:entry key="#{ T(javax.xml.bind.Marshaller).JAXB_FORMATTED_OUTPUT }" value="#{ true }"/>
@@ -63,7 +60,6 @@
             <util:list>
                 <beans:value>classpath*:META-INF/schema/DSML/DSMLv2.xsd</beans:value>
                 <beans:value>classpath*:META-INF/schema/HPD/HPD.xsd</beans:value>
-                <beans:value>classpath*:META-INF/schema/HPD_Plus/HPD_Plus.xsd</beans:value>
             </util:list>
         </beans:property>
     </beans:bean>
