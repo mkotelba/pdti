@@ -75,12 +75,12 @@ uid: org100
 # START: MEMBERSHIP(S)
 #==================================================
 
-dn: ou=Memberships,o=dev2.provider-directories.com,dc=hpd
+dn: ou=HPDProviderMembership,o=dev2.provider-directories.com,dc=hpd
 objectClass: organizationalunit
 objectClass: top
-ou: Memberships
+ou: HPDProviderMembership
 
-dn: hpdMemberId=100,ou=Memberships,o=dev2.provider-directories.com,dc=hpd
+dn: hpdMemberId=100,ou=HPDProviderMembership,o=dev2.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=org100,ou=HcRegulatedOrganization,o=dev2.provider-directories.com,dc=hpd

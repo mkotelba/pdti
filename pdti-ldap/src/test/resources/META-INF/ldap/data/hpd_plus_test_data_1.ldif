@@ -209,12 +209,12 @@ hpdCredential: hpdCredentialId=2,ou=Credentials,o=dev.provider-directories.com,d
 # START: MEMBERSHIP(S)
 #==================================================
 
-dn: ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: organizationalunit
 objectClass: top
-ou: Memberships
+ou: HPDProviderMembership
 
-dn: hpdMemberId=1,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=1,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=2.16.840.1.113883.3.4295:org1,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
@@ -228,28 +228,28 @@ pager: +1 123 456 7890
 telephoneNumber: +1 123 456 7890
 facsimileTelephoneNumber: +1 123 456 7890
 
-dn: hpdMemberId=2,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=2,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=2.16.840.1.113883.3.4295:org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 hpdHasAProvider: uid=2.16.840.1.113883.3.4295:provider2,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 hpdMemberId: 2
 
-dn: hpdMemberId=3,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=3,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=2.16.840.1.113883.3.4295:org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 hpdHasAProvider: uid=2.16.840.1.113883.3.4295:provider3,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 hpdMemberId: 3
 
-dn: hpdMemberId=4,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=4,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=2.16.840.1.113883.3.4295:org5,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 #hpdHasASubOrg: hpdOrgId=org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 hpdMemberId: 4
 
-dn: hpdMemberId=5,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=5,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=2.16.840.1.113883.3.4295:org4,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd

@@ -304,33 +304,33 @@ hpdProviderMailingAddress: country=Canada
 # START: MEMBERSHIP(S)
 #==================================================
 
-dn: ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: organizationalunit
 objectClass: top
-ou: Memberships
+ou: HPDProviderMembership
 
-dn: hpdMemberId=1,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=1,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=IHEAssigningAuthority:11,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 hpdMemberId: 1
 hpdHasAProvider: uid=IHEAssigningAuthority:101,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 
-dn: hpdMemberId=2,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=2,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=IHEAssigningAuthority:12,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 hpdHasAProvider: uid=IHEAssigningAuthority:103,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 hpdMemberId: 2
 
-dn: hpdMemberId=3,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=3,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=IHEAssigningAuthority:13,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 hpdHasAProvider: uid=IHEAssigningAuthority:104,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 hpdMemberId: 3
 
-dn: hpdMemberId=4,ou=Memberships,o=dev.provider-directories.com,dc=hpd
+dn: hpdMemberId=4,ou=HPDProviderMembership,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=IHEAssigningAuthority:11,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
