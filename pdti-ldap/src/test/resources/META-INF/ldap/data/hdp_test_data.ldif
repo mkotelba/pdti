@@ -40,7 +40,7 @@ HcIdentifier: 1.3.6.1.4.1.21367.1776:IHENA:A-919191:Active
 HcProfession:  207L00000X
 #HcRole: HL-7 code for role
 HcSpecialisation: 1.3.6.1.4.1.21367.1776:IHENA:A-919191:Anesthesiology
-hpdCredential: hpdCredentialId=1,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=1,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 hpdProviderBillingAddress: addr=01251 Chestnut Street,Panama City, DE 50369
 hpdProviderLanguageSupported: en
 hpdProviderLegalAddress: addr=501 S. 54th Street Philadelphia PA 19143
@@ -71,7 +71,7 @@ objectClass: HPDProvider
 HcIdentifier: 1.3.6.1.4.1.21367.1776:IHENA:A-737373:Active
 HcProfession: 2084N0400X
 HcSpecialisation: 1.3.6.1.4.1.21367.1776:IHENA:2084N0400X:Neurology
-hpdCredential: hpdCredentialId=2,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=2,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 cn: Richard Reynolds
 description: Neurology
 givenName: Richard
@@ -115,7 +115,7 @@ objectClass: HPDProvider
 HcIdentifier: 1.3.6.1.4.1.21367.1789:IHEEU:A-828282:Active
 HcProfession: 1835X0200X
 HcSpecialisation: 1.3.6.1.4.1.21367.1789:IHEEU:1835X0200X:Oncology
-hpdCredential: hpdCredentialId=3,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=3,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 cn: Camille Bouchard
 description: Oncology
 givenName: Camille
@@ -157,7 +157,7 @@ objectClass: HPDProvider
 HcIdentifier: 1.3.6.1.4.1.21367.1776:IHENA:A-656565:Active
 HcProfession: 2085P0229X
 HcSpecialisation: 1.3.6.1.4.1.21367.1776:IHENA:2085P0229X:Pediatric Radiology
-hpdCredential: hpdCredentialId=3,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=3,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 cn: Matthew Marston
 description: Pediatric Radiology
 givenName: Matthew
@@ -216,7 +216,7 @@ uid: IHEAssigningAuthority:11
 ClinicalInformationContact: uid=2.16.840.1.113883.3.4295:provider1,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 HcRegisteredName: Mercy Philadelphia Hospital
 HcSpecialisation: 2.16.840.1.113883.6.101:NUCC:207X00000X:Orthopedic Surgery
-hpdCredential: hpdCredentialId=2,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=2,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 hpdProviderBillingAddress: addr=202 22nd Avenue Philadelphia PA 19102
 hpdProviderLanguageSupported: en
 hpdProviderLegalAddress: addr=202 22nd Avenue Philadelphia PA 19102
@@ -244,7 +244,7 @@ objectClass: HPDProvider
 HcIdentifier: 1.3.6.1.4.1.21367.1789:IHEEU:O-343434:Active
 o: Groupe hospitalier Saint-André
 HcRegisteredName: Hôpital Saint-André
-hpdCredential: hpdCredentialId=6,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=6,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 hpdProviderMailingAddress: addr=1 rue Jean Burguet 33000 Bordeaux France
 hpdProviderMailingAddress: streetNumber=1
 hpdProviderMailingAddress: streetName=rue Jean Burguet
@@ -275,7 +275,7 @@ uid: IHEAssigningAuthority:13
 facsimileTelephoneNumber: 416 461 5696
 telephoneNumber: 416 461 8252
 HcRegisteredName: Bridgepoint Health
-hpdCredential: hpdCredentialId=7,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=7,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 ClinicalInformationContact: uid=IHEAssigningAuthority:13,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 hpdProviderStatus: Active
 hpdProviderLanguageSupported: en fr
@@ -366,85 +366,85 @@ member: uid=IHEAssigningAuthority:102, ou=HCProfessional, o=dev.provider-directo
 # START: CREDENTIAL(S)
 #==================================================
 
-dn: ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: organizationalunit
 objectClass: top
-ou: Credentials
+ou: HPDCredential
 
-dn: hpdCredentialId=1,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=1,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 credentialName: A_Degree@Connectathon_domain_name
 credentialType: degree
 credentialNumber: 1.3.6.1.4.1.21367.13.95:AAAA
 hpdCredentialId: 1
-description: Ann Andrews' credential
+credentialDescription: Ann Andrews' credential
 credentialStatus: Active
 hpdHasAProvider: uid=IHEAssigningAuthority:101,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 
-dn: hpdCredentialId=2,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=2,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 hpdCredentialId: 2
 credentialName: B_Certificate@Connectathon_domain_name
 credentialNumber: 1.3.6.1.4.1.21367.13.95:BBBB
 credentialType: certificate
-description: Richard Reynolds' credential
+credentialDescription: Richard Reynolds' credential
 credentialStatus: Active
 hpdHasAProvider: uid=IHEAssigningAuthority:102,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 
-dn: hpdCredentialId=3,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=3,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 hpdCredentialId: 3
 credentialName: C_Degree@Connectathon_domain_name
 credentialNumber: 1.3.6.1.4.1.21367.13.95:CCCC
 credentialType: degree
-description: Camille Bouchard's credential
+credentialDescription: Camille Bouchard's credential
 credentialStatus: Active
 hpdHasAProvider: uid=IHEAssigningAuthority:103,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 
-dn: hpdCredentialId=4,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=4,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 hpdCredentialId: 4
 credentialName: D_Degree@Connectathon_domain_name
 credentialNumber: 1.3.6.1.4.1.21367.13.95:DDDD
 credentialType: degree
-description: Mathew Marston's credential
+credentialDescription: Mathew Marston's credential
 credentialStatus: Active
 hpdHasAProvider: uid=IHEAssigningAuthority:104,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 
-dn: hpdCredentialId=5,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=5,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 hpdCredentialId: 5
 credentialName: Emergency Hospital@Connectathon_domain_name
 credentialNumber: 1.3.6.1.4.1.21367.13.95:1111
 credentialType: certificate
-description: Mercy Health Center credential
+credentialDescription: Mercy Health Center credential
 credentialStatus: Active
 hpdHasAProvider: uid=IHEAssigningAuthority:11,ou=HCRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 
-dn: hpdCredentialId=6,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=6,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 hpdCredentialId: 6
 credentialName: General Hospital@Connectathon_domain_name
 credentialNumber: 1.3.6.1.4.1.21367.13.95:2222
 credentialType: certificate
-description: Hôpital Saint-André credential
+credentialDescription: Hôpital Saint-André credential
 credentialStatus: Active
 hpdHasAProvider: uid=IHEAssigningAuthority:12,ou=HCRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 
-dn: hpdCredentialId=7,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=7,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 hpdCredentialId: 7
 credentialName: General Hospital@Connectathon_domain_name
 credentialNumber: 1.3.6.1.4.1.21367.13.95:3333
 credentialType: certificate
-description: Bridgepoint Health credential
+credentialDescription: Bridgepoint Health credential
 credentialStatus: Active
 hpdHasAProvider: uid=IHEAssigningAuthority:13,ou=HCRegulatedOrganization,o=dev.provider-directories.com,dc=hpd
 

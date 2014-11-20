@@ -39,7 +39,7 @@ HcIdentifier: 2.16.840.1.113883.4.6:npi:1111111111:Active
 HcProfession: OrthopedicSurgeon
 #HcRole: HL-7 code for role
 HcSpecialisation: 2.16.840.1.113883.6.101:NUCC:207X00000X:Orthopedic Surgery
-hpdCredential: hpdCredentialId=1,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=1,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 hpdHasAService: hpdServiceId=6,ou=Services,o=dev.provider-directories.com,dc=hpd
 hpdProviderBillingAddress: addr=01251 Chestnut Street,Panama City, DE 50369
 hpdProviderLanguageSupported: en
@@ -136,7 +136,7 @@ uid: 2.16.840.1.113883.3.4295:org1
 ClinicalInformationContact: uid=2.16.840.1.113883.3.4295:provider1,ou=HcProfessional,o=dev.provider-directories.com,dc=hpd
 HcRegisteredName: Dr. Thomas Jones' Private Practice
 HcSpecialisation: 2.16.840.1.113883.6.101:NUCC:207X00000X:Orthopedic Surgery
-hpdCredential: hpdCredentialId=2,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=2,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 hpdHasAService: hpdServiceId=4,ou=Services,o=dev.provider-directories.com,dc=hpd
 hpdProviderBillingAddress: addr=01251 Chestnut Street,Panama City, DE 50369
 hpdProviderLanguageSupported: en
@@ -199,7 +199,7 @@ hpdProviderBillingAddress: addr=123 Peachtree Street,Atlanta, GA 30032
 hpdProviderPracticeAddress: addr=123 Peachtree Street,Atlanta, GA 30032
 hpdProviderLegalAddress: addr=123 Peachtree Street,Atlanta, GA 30032
 hpdHasAService: hpdServiceId=4,ou=Services,o=dev.provider-directories.com,dc=hpd
-hpdCredential: hpdCredentialId=2,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=2,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 
 #==================================================
 # END: ORGANIZATION(S)
@@ -386,28 +386,28 @@ hpdContentProfile: C64
 # START: CREDENTIAL(S)
 #==================================================
 
-dn: ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: organizationalunit
 objectClass: top
-ou: Credentials
+ou: HPDCredential
 
-dn: hpdCredentialId=1,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=1,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 credentialName: Delaware medical license
 credentialType: medicalLicense
 credentialNumber: 1
 hpdCredentialId: 1
-description: Thomas Jones' Delaware medical license
+credentialDescription: Thomas Jones' Delaware medical license
 
-dn: hpdCredentialId=2,ou=Credentials,o=dev.provider-directories.com,dc=hpd
+dn: hpdCredentialId=2,ou=HPDCredential,o=dev.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 hpdCredentialId: 2
 credentialName: Delaware organizational facility credential
 credentialNumber: 2
 credentialType: credential
-description: Thomas Jones' organizational credential
+credentialDescription: Thomas Jones' organizational credential
 credentialIssueDate: 19851106210627.3-0500
 credentialRenewalDate: 19921106210627.3-0500
 credentialStatus: Active
