@@ -73,13 +73,18 @@
     </beans:bean>
     <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
                     p:location="classpath:jdbc.properties"/>
-    <beans:bean id="dataSource"
+    <!-- <beans:bean id="dataSource"
                 class="org.springframework.jdbc.datasource.DriverManagerDataSource"
                 p:driverClassName="${jdbc.driverClassName}"
                 p:url="${jdbc.url}"
                 p:username="${jdbc.username}"
                 p:password="${jdbc.password}"
-    /> 
+    />  -->
+    
+    <beans:bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"
+    			p:jndiName="java:comp/env/jdbc/pdti_audit">
+	</beans:bean>
+	
     <!-- Database Property -->
     <beans:bean id="hibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <beans:property name="properties">
