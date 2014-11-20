@@ -41,7 +41,7 @@ hpdProviderBillingAddress: addr=532 Maple Drive,Austin, TX 78610
 hpdProviderPracticeAddress: addr=532 Maple Drive,Austin, TX 78610
 hpdProviderLanguageSupported: en
 uid: albert.johnson
-hpdCredential: hpdCredentialId=100,ou=Credentials,o=dev2.provider-directories.com,dc=hpd
+hpdCredential: hpdCredentialId=100,ou=HPDCredential,o=dev2.provider-directories.com,dc=hpd
 gender: m
 
 #==================================================
@@ -75,12 +75,12 @@ uid: org100
 # START: MEMBERSHIP(S)
 #==================================================
 
-dn: ou=Memberships,o=dev2.provider-directories.com,dc=hpd
+dn: ou=HPDProviderMembership,o=dev2.provider-directories.com,dc=hpd
 objectClass: organizationalunit
 objectClass: top
-ou: Memberships
+ou: HPDProviderMembership
 
-dn: hpdMemberId=100,ou=Memberships,o=dev2.provider-directories.com,dc=hpd
+dn: hpdMemberId=100,ou=HPDProviderMembership,o=dev2.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderMembership
 hpdHasAnOrg: uid=org100,ou=HcRegulatedOrganization,o=dev2.provider-directories.com,dc=hpd
@@ -117,19 +117,19 @@ hpdContentProfile: CAQH CORE Phase I Operating Rules
 # START: CREDENTIAL(S)
 #==================================================
 
-dn: ou=Credentials,o=dev2.provider-directories.com,dc=hpd
+dn: ou=HPDCredential,o=dev2.provider-directories.com,dc=hpd
 objectClass: organizationalunit
 objectClass: top
-ou: Credentials
+ou: HPDCredential
 
-dn: hpdCredentialId=100,ou=Credentials,o=dev2.provider-directories.com,dc=hpd
+dn: hpdCredentialId=100,ou=HPDCredential,o=dev2.provider-directories.com,dc=hpd
 objectClass: top
 objectClass: HPDProviderCredential
 credentialName: Texas medical license
 credentialType: medicalLicense
 credentialNumber: 100
 hpdCredentialId: 100
-description: Albert Johnson's Texas medical license
+credentialDescription: Albert Johnson's Texas medical license
 
 #==================================================
 # END: CREDENTIAL(S)
