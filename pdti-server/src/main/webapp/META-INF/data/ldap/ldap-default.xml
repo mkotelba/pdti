@@ -11,6 +11,6 @@
     
     <beans:bean id="ldapDataSourceDefault" class="gov.hhs.onc.pdti.data.ldap.impl.LdapDataSourceImpl" parent="ldapDataSource"
         p:type="APACHEDS"
-        p:host="aidevelopment"
+        p:host="localhost"
         p:port="10389"/>
 </beans:beans>
