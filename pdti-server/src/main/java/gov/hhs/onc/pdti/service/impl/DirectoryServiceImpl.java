@@ -1,6 +1,5 @@
 package gov.hhs.onc.pdti.service.impl;
 
-import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
 import gov.hhs.onc.pdti.DirectoryStandard;
 import gov.hhs.onc.pdti.DirectoryStandardId;
 import gov.hhs.onc.pdti.DirectoryType;
@@ -12,10 +11,12 @@ import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorException;
 import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorNoOpException;
 import gov.hhs.onc.pdti.interceptor.DirectoryRequestInterceptor;
 import gov.hhs.onc.pdti.interceptor.DirectoryResponseInterceptor;
+import gov.hhs.onc.pdti.server.xml.FederatedResponseStatus;
+import gov.hhs.onc.pdti.server.xml.FederatedSearchResponseData;
+import gov.hhs.onc.pdti.server.xml.SearchResultEntryMetadata;
 import gov.hhs.onc.pdti.service.DirectoryService;
 import gov.hhs.onc.pdti.statistics.entity.PDTIStatisticsEntity;
-import gov.hhs.onc.pdti.statistics.service.PdtiAuditLog;
-import gov.hhs.onc.pdti.statistics.service.impl.PdtiAuditLogImpl;
+import gov.hhs.onc.pdti.statistics.service.PdtiAuditService;
 import gov.hhs.onc.pdti.util.DirectoryUtils;
 import gov.hhs.onc.pdti.ws.api.BatchRequest;
 import gov.hhs.onc.pdti.ws.api.BatchResponse;
@@ -24,9 +25,7 @@ import gov.hhs.onc.pdti.ws.api.DsmlMessage;
 import gov.hhs.onc.pdti.ws.api.ErrorResponse.ErrorType;
 import gov.hhs.onc.pdti.ws.api.ObjectFactory;
 import gov.hhs.onc.pdti.ws.api.SearchResponse;
-import gov.hhs.onc.pdti.server.xml.FederatedResponseStatus;
-import gov.hhs.onc.pdti.server.xml.FederatedSearchResponseData;
-import gov.hhs.onc.pdti.server.xml.SearchResultEntryMetadata;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,11 +35,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedSet;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Service;
+
+import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
 
 @DirectoryStandard(DirectoryStandardId.IHE)
 @Scope("singleton")
@@ -53,6 +55,9 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
     @DirectoryStandard(DirectoryStandardId.IHE)
     private ObjectFactory objectFactory;
     private static String dirStaticId = "";
+    
+    @Autowired
+    PdtiAuditService pdtiAuditLogService;
 
     @Override
     public BatchResponse processRequest(BatchRequest batchReq) {
@@ -170,8 +175,8 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
         } else {
             entity.setStatus("Success");
         }
-        PdtiAuditLog pdtiAuditLogService = PdtiAuditLogImpl.getInstance();
-        pdtiAuditLogService.save(entity);
+        //PdtiAuditLog pdtiAuditLogService = PdtiAuditLogImpl.getInstance();
+        pdtiAuditLogService.savePdtiStatisticsEntity(entity);
         return batchResp;
     }
 
