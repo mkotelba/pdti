@@ -9,16 +9,19 @@
     xmlns:task="http://www.springframework.org/schema/task"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-        http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services.xsd">
+        http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
     
     <!-- Enabling Spring component scanning in the project package -->
     <context:component-scan base-package="gov.hhs.onc.pdti"/>
+    <jpa:repositories base-package="gov.hhs.onc.pdti.statistics.repository" />
     
     <!-- Defining task executor -->
     <task:executor id="dirExecutor" pool-size="1" queue-capacity="5"/>
@@ -71,65 +74,22 @@
             <util:constant static-field="org.springframework.ws.soap.SoapVersion.SOAP_12"/>
         </beans:property>
     </beans:bean>
-    <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-                    p:location="classpath:jdbc.properties"/>
-    <!-- <beans:bean id="dataSource"
-                class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-                p:driverClassName="${jdbc.driverClassName}"
-                p:url="${jdbc.url}"
-                p:username="${jdbc.username}"
-                p:password="${jdbc.password}"
-    />  -->
     
     <beans:bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"
     			p:jndiName="java:comp/env/jdbc/pdti_audit">
 	</beans:bean>
-	
-    <!-- Database Property -->
-    <beans:bean id="hibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <beans:property name="properties">
-            <beans:props>
-                <!-- debug/loggin props -->
-                <beans:prop key="javax.persistence.validation.mode">none</beans:prop>
-                <beans:prop key="hibernate.show_sql">${hibernate.show_sql}</beans:prop>
-                <beans:prop key="hibernate.formate_sql">true</beans:prop>
-                <beans:prop key="hibernate.user_sql_comments">true</beans:prop>
-                <!-- real properties -->
-                <!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
-                <beans:prop key="hibernate.hbm2ddl.auto">update</beans:prop> 
-                <!-- <prop key="hibernate.connection.autocommit">true</prop> -->
-                <beans:prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</beans:prop>
-                <beans:prop key="hibernate.dialect">${hibernate.dialect}</beans:prop>
-                <beans:prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</beans:prop>
-                <!-- <prop key="hibernate.current_session_context_class">org.hibernate.context.ThreadLocalSessionContext</prop> -->
-                <!-- <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop> -->
-            </beans:props>
-        </beans:property>
-    </beans:bean>
 		
-    <beans:bean id = "transactionManager" class = "org.springframework.orm.hibernate4.HibernateTransactionManager">
-        <beans:property name = "sessionFactory" ref = "sessionFactory" />
-    </beans:bean>     
-    	
-    <beans:bean id="pdtiStatisticsDAO" class="gov.hhs.onc.pdti.statistics.dao.PDTIStatisticsDAO">
-        <beans:property name="sessionFactory" ref="sessionFactory" />
-    </beans:bean>
-	
-    <beans:bean id="namingStrategy" class="org.hibernate.cfg.ImprovedNamingStrategy"/>
+    <!-- Entity Manager --> 	
+	<beans:bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="persistenceUnitName" value="pdtiAuditPersist" />
+	</beans:bean>
 
-    <!-- Hibernate SessionFactory -->
-    <beans:bean id="sessionFactory"
-                name="hsqlSessionFactory"
-                class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
-                p:configLocation="classpath:hibernate.cfg.xml"
-                p:hibernateProperties-ref="hibernateProperties"
-                p:dataSource-ref="dataSource"
-                p:namingStrategy-ref="namingStrategy">
-			
-        <beans:property name="annotatedClasses">
-            <util:list>
-                <beans:value>gov.hhs.onc.pdti.statistics.entity.PDTIStatisticsEntity</beans:value>                	
-            </util:list>
-        </beans:property>                
-    </beans:bean>	
+	<!-- Transaction Manager -->
+	<beans:bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<beans:property name="entityManagerFactory" ref="entityManagerFactory" />
+	</beans:bean>
+
+   	
 </beans:beans>
