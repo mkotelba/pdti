@@ -1,590 +1,583 @@
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
-    <modelVersion>4.0.0</modelVersion>
-    
-    <parent>
-        <groupId>gov.hhs.onc.pdti</groupId>
-        <artifactId>pdti-parent</artifactId>
-        <version>1.3-SNAPSHOT</version>
-        <relativePath>../pdti-parent</relativePath>
-    </parent>
-    
-    <artifactId>pdti-server</artifactId>
-    <packaging>war</packaging>
-    
-    <name>pdti-server</name>
-    <description>Provider Directories Test Implementation (PDTI) server webapp.</description>
-    <url>http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
-    
-    <scm>
-        <url>http://code.google.com/p/pdti/source/browse/${project.artifactId}/</url>
-        <developerConnection>scm:hg:https://code.google.com/p/pdti/</developerConnection>
-        <connection>scm:hg:http://code.google.com/p/pdti/</connection>
-    </scm>
-    
-    <distributionManagement>
-        <site>
-            <id>api.provider-directories.com</id>
-            <name>api.provider-directories.com</name>
-            <url>dav:http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
-        </site>
-    </distributionManagement>
-    
-    <dependencies>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>pdti-ldap</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>pdti-ws</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>pdti-dao</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm.icu</groupId>
-            <artifactId>icu4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.stream</groupId>
-            <artifactId>sjsxp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.stream.buffer</groupId>
-            <artifactId>streambuffer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>apache-log4j-extras</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.api</groupId>
-            <artifactId>api-dsml-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.api</groupId>
-            <artifactId>api-ldap-client-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.jdbm</groupId>
-            <artifactId>apacheds-jdbm2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics-annotate</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.jax-ws-commons.spring</groupId>
-            <artifactId>jaxws-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-expression</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>3.2.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.0-801.jdbc4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.1.1.Final</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-ws-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-test-framework</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.3</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
-    
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>process-test-sources</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeScope>test</includeScope>
-                            <outputDirectory>${project.build.directory}/${project.build.finalName}-test/WEB-INF/lib</outputDirectory>
-                            <silent>true</silent>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>test-jar</id>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/${project.build.finalName}-test/WEB-INF/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/${project.build.finalName}-test</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/test/webapp</directory>
-                                    <filtering>true</filtering>
-                                    <includes>
-                                        <include>**/*.xml</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>${project.basedir}/src/test/webapp</directory>
-                                    <excludes>
-                                        <exclude>**/*.xml</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>war</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>test</classifier>
-                            <primaryArtifact>false</primaryArtifact>
-                            <webappDirectory>${project.build.directory}/${project.build.finalName}-test</webappDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.kuali.maven.plugins</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>read-pom-properties</id>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    
-    <profiles>
-        <!-- Allow for optional running of integration tests against temporary LDAP and server instances -->
-        <profile>
-            <id>test-server</id>
-            <activation>
-                <property>
-                    <name>!skipTests</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.redfish4ktc.soapui</groupId>
-                        <artifactId>maven-soapui-extension-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>test-hpdplus</id>
-                                <phase>integration-test</phase>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                                <configuration>
-                                    <outputFolder>${project.build.directory}/surefire-reports</outputFolder>
-                                    <projectFile>${project.build.testOutputDirectory}/soapui-project_hpdplus.xml</projectFile>
-                                    <projectProperties>
-                                        <value>project.test.server.wsdl.url=${project.test.server.1.dir.wsdl.location.hpdplus}</value>
-                                        <value>project.test.server.dsml.dn.base=${project.test.server.1.dir.dn.base}</value>
-                                    </projectProperties>
-                                    <settingsFile>${project.build.testOutputDirectory}/soapui-settings.xml</settingsFile>
-                                    <soapuiProperties>
-                                        <property>
-                                            <name>soapui.logroot</name>
-                                            <value>${project.test.log.dir}/</value>
-                                        </property>
-                                    </soapuiProperties>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>test-verify</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>test-verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>start-apacheds</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <path id="maven.classpath">
-                                            <path refid="maven.compile.classpath"/>
-                                            <path refid="maven.plugin.classpath"/>
-                                            <path refid="maven.runtime.classpath"/>
-                                            <path refid="maven.test.classpath"/>
-                                        </path>
-                                        <ant antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml" target="apacheds-start" inheritRefs="true">
-                                            <property name="instance" value="1"/>
-                                            <property name="jmxPort" value="${project.test.server.1.ldap.1.jmx.port}"/>
-                                            <property name="ldapHost" value="${project.test.server.1.ldap.1.host}"/>
-                                            <property name="ldapPort" value="${project.test.server.1.ldap.1.port}"/>
-                                            <property name="dataPartName" value="${project.test.server.1.ldap.1.data.partition.name}"/>
-                                            <property name="dataPartSuffix" value="${project.test.server.1.ldap.1.data.partition.suffix}"/>
-                                            <property name="dataLdifFile" value="${project.test.server.1.ldap.1.data.ldif.file}"/>
-                                        </ant>
-                                        <ant antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml" target="apacheds-start" inheritRefs="true">
-                                            <property name="instance" value="2"/>
-                                            <property name="jmxPort" value="${project.test.server.2.ldap.1.jmx.port}"/>
-                                            <property name="ldapHost" value="${project.test.server.2.ldap.1.host}"/>
-                                            <property name="ldapPort" value="${project.test.server.2.ldap.1.port}"/>
-                                            <property name="dataPartName" value="${project.test.server.2.ldap.1.data.partition.name}"/>
-                                            <property name="dataPartSuffix" value="${project.test.server.2.ldap.1.data.partition.suffix}"/>
-                                            <property name="dataLdifFile" value="${project.test.server.2.ldap.1.data.ldif.file}"/>
-                                        </ant>
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-apacheds</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <path id="maven.classpath">
-                                            <path refid="maven.compile.classpath"/>
-                                            <path refid="maven.plugin.classpath"/>
-                                            <path refid="maven.runtime.classpath"/>
-                                            <path refid="maven.test.classpath"/>
-                                        </path>
-                                        <ant antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml" target="apacheds-stop" inheritRefs="true">
-                                            <property name="instance" value="1"/>
-                                            <property name="jmxPort" value="${project.test.server.1.ldap.1.jmx.port}"/>
-                                            <property name="ldapHost" value="${project.test.server.1.ldap.1.host}"/>
-                                            <property name="ldapPort" value="${project.test.server.1.ldap.1.port}"/>
-                                        </ant>
-                                        <ant antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml" target="apacheds-stop" inheritRefs="true">
-                                            <property name="instance" value="2"/>
-                                            <property name="jmxPort" value="${project.test.server.2.ldap.1.jmx.port}"/>
-                                            <property name="ldapHost" value="${project.test.server.2.ldap.1.host}"/>
-                                            <property name="ldapPort" value="${project.test.server.2.ldap.1.port}"/>
-                                        </ant>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.cargo</groupId>
-                        <artifactId>cargo-maven2-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>start-container1</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>start</goal>
-                                </goals>
-                                <configuration>
-                                    <container>
-                                        <systemProperties>
-                                            <pdti.context.config.data.directory>${project.test.server.1.context.config.data.directory}</pdti.context.config.data.directory>
-                                            <pdti.context.config.data.ldap>${project.test.server.1.context.config.data.ldap}</pdti.context.config.data.ldap>
-                                            <pdti.context.config.data.federation>${project.test.server.1.context.config.data.federation}</pdti.context.config.data.federation>
-                                            <pdti.debug>true</pdti.debug>
-                                            <pdti.log.dir>${project.test.log.dir}</pdti.log.dir>
-                                            <pdti.log.file.basename>${project.test.server.1.log.file.basename}</pdti.log.file.basename>
-                                        </systemProperties>
-                                    </container>
-                                    <configuration>
-                                        <home>${project.test.server.1.jetty.config.home}</home>
-                                        <properties>
-                                            <cargo.hostname>${project.test.server.1.host}</cargo.hostname>
-                                            <cargo.rmi.port>${project.test.server.1.rmi.port}</cargo.rmi.port>
-                                            <cargo.servlet.port>${project.test.server.1.port}</cargo.servlet.port>
-                                        </properties>
-                                    </configuration>
-                                    <deployables>
-                                        <deployable>
-                                            <groupId>${project.groupId}</groupId>
-                                            <artifactId>${project.artifactId}</artifactId>
-                                            <type>${project.packaging}</type>
-                                            <classifier>test</classifier>
-                                            <properties>
-                                                <context>/${project.test.server.1.context}</context>
-                                            </properties>
-                                        </deployable>
-                                    </deployables>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>start-container2</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>start</goal>
-                                </goals>
-                                <configuration>
-                                    <container>
-                                        <systemProperties>
-                                            <pdti.context.config.data.directory>${project.test.server.2.context.config.data.directory}</pdti.context.config.data.directory>
-                                            <pdti.context.config.data.ldap>${project.test.server.2.context.config.data.ldap}</pdti.context.config.data.ldap>
-                                            <pdti.context.config.data.federation>${project.test.server.2.context.config.data.federation}</pdti.context.config.data.federation>
-                                            <pdti.debug>true</pdti.debug>
-                                            <pdti.log.dir>${project.test.log.dir}</pdti.log.dir>
-                                            <pdti.log.file.basename>${project.test.server.2.log.file.basename}</pdti.log.file.basename>
-                                        </systemProperties>
-                                    </container>
-                                    <configuration>
-                                        <home>${project.test.server.2.jetty.config.home}</home>
-                                        <properties>
-                                            <cargo.hostname>${project.test.server.2.host}</cargo.hostname>
-                                            <cargo.rmi.port>${project.test.server.2.rmi.port}</cargo.rmi.port>
-                                            <cargo.servlet.port>${project.test.server.2.port}</cargo.servlet.port>
-                                        </properties>
-                                    </configuration>
-                                    <deployables>
-                                        <deployable>
-                                            <groupId>${project.groupId}</groupId>
-                                            <artifactId>${project.artifactId}</artifactId>
-                                            <type>${project.packaging}</type>
-                                            <classifier>test</classifier>
-                                            <properties>
-                                                <context>/${project.test.server.2.context}</context>
-                                            </properties>
-                                        </deployable>
-                                    </deployables>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-container1</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                                <configuration>
-                                    <configuration>
-                                        <home>${project.test.server.1.jetty.config.home}</home>
-                                        <properties>
-                                            <cargo.hostname>${project.test.server.1.host}</cargo.hostname>
-                                            <cargo.rmi.port>${project.test.server.1.rmi.port}</cargo.rmi.port>
-                                            <cargo.servlet.port>${project.test.server.1.port}</cargo.servlet.port>
-                                        </properties>
-                                    </configuration>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-container2</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                                <configuration>
-                                    <configuration>
-                                        <home>${project.test.server.2.jetty.config.home}</home>
-                                        <properties>
-                                            <cargo.hostname>${project.test.server.2.host}</cargo.hostname>
-                                            <cargo.rmi.port>${project.test.server.2.rmi.port}</cargo.rmi.port>
-                                            <cargo.servlet.port>${project.test.server.2.port}</cargo.servlet.port>
-                                        </properties>
-                                    </configuration>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>deploy-servers</id>
-            <activation>
-                <property>
-                    <name>!skipTests</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>tomcat7-deploy-server1</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>deploy-only</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>tomcat7-deploy-server2</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>deploy-only</goal>
-                                </goals>
-                                <configuration combine.self="override">
-                                    <password>${tomcat.manager.2.password}</password>
-                                    <path>/${project.deploy.server.2.context}</path>
-                                    <url>${tomcat.manager.2.url}</url>
-                                    <username>${tomcat.manager.2.username}</username>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>gov.hhs.onc.pdti</groupId>
+		<artifactId>pdti</artifactId>
+		<version>1.3-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>pdti-server</artifactId>
+	<packaging>war</packaging>
+
+	<name>pdti-server</name>
+	<description>Provider Directories Test Implementation (PDTI) server webapp.</description>
+	<url>http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
+
+	<scm>
+		<url>http://code.google.com/p/pdti/source/browse/${project.artifactId}/</url>
+		<developerConnection>scm:hg:https://code.google.com/p/pdti/</developerConnection>
+		<connection>scm:hg:http://code.google.com/p/pdti/</connection>
+	</scm>
+
+	<distributionManagement>
+		<site>
+			<id>api.provider-directories.com</id>
+			<name>api.provider-directories.com</name>
+			<url>dav:http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
+		</site>
+	</distributionManagement>
+
+	<properties>
+		<spring.data.version>1.7.1.RELEASE</spring.data.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pdti-ldap</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+			<type>test-jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pdti-ws</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pdti-dao</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.stream</groupId>
+			<artifactId>sjsxp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.stream.buffer</groupId>
+			<artifactId>streambuffer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>apache-log4j-extras</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.api</groupId>
+			<artifactId>api-dsml-engine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.api</groupId>
+			<artifactId>api-ldap-client-all</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.jdbm</groupId>
+			<artifactId>apacheds-jdbm2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-basics-annotate</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-basics-runtime</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jax-ws-commons.spring</groupId>
+			<artifactId>jaxws-spring</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-core</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-core</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-core</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-core</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-core</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.server</groupId>
+			<artifactId>apacheds-test-framework</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.3</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeScope>test</includeScope>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}-test/WEB-INF/lib</outputDirectory>
+							<silent>true</silent>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>test-jar</id>
+						<configuration>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}-test/WEB-INF/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}-test</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/test/webapp</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.xml</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${project.basedir}/src/test/webapp</directory>
+									<excludes>
+										<exclude>**/*.xml</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>war</goal>
+						</goals>
+						<configuration>
+							<classifier>test</classifier>
+							<primaryArtifact>false</primaryArtifact>
+							<webappDirectory>${project.build.directory}/${project.build.finalName}-test</webappDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.kuali.maven.plugins</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>read-pom-properties</id>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<!-- Allow for optional running of integration tests against temporary 
+			LDAP and server instances -->
+		<profile>
+			<id>test-server</id>
+			<activation>
+				<property>
+					<name>!skipTests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.redfish4ktc.soapui</groupId>
+						<artifactId>maven-soapui-extension-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>test-verify</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>test-verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>start-apacheds</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<path id="maven.classpath">
+											<path refid="maven.compile.classpath" />
+											<path refid="maven.plugin.classpath" />
+											<path refid="maven.runtime.classpath" />
+											<path refid="maven.test.classpath" />
+										</path>
+										<ant
+											antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml"
+											target="apacheds-start" inheritRefs="true">
+											<property name="instance" value="1" />
+											<property name="jmxPort"
+												value="${project.test.server.1.ldap.1.jmx.port}" />
+											<property name="ldapHost"
+												value="${project.test.server.1.ldap.1.host}" />
+											<property name="ldapPort"
+												value="${project.test.server.1.ldap.1.port}" />
+											<property name="dataPartName"
+												value="${project.test.server.1.ldap.1.data.partition.name}" />
+											<property name="dataPartSuffix"
+												value="${project.test.server.1.ldap.1.data.partition.suffix}" />
+											<property name="dataLdifFile"
+												value="${project.test.server.1.ldap.1.data.ldif.file}" />
+										</ant>
+										<ant
+											antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml"
+											target="apacheds-start" inheritRefs="true">
+											<property name="instance" value="2" />
+											<property name="jmxPort"
+												value="${project.test.server.2.ldap.1.jmx.port}" />
+											<property name="ldapHost"
+												value="${project.test.server.2.ldap.1.host}" />
+											<property name="ldapPort"
+												value="${project.test.server.2.ldap.1.port}" />
+											<property name="dataPartName"
+												value="${project.test.server.2.ldap.1.data.partition.name}" />
+											<property name="dataPartSuffix"
+												value="${project.test.server.2.ldap.1.data.partition.suffix}" />
+											<property name="dataLdifFile"
+												value="${project.test.server.2.ldap.1.data.ldif.file}" />
+										</ant>
+									</target>
+								</configuration>
+							</execution>
+							<execution>
+								<id>stop-apacheds</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<path id="maven.classpath">
+											<path refid="maven.compile.classpath" />
+											<path refid="maven.plugin.classpath" />
+											<path refid="maven.runtime.classpath" />
+											<path refid="maven.test.classpath" />
+										</path>
+										<ant
+											antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml"
+											target="apacheds-stop" inheritRefs="true">
+											<property name="instance" value="1" />
+											<property name="jmxPort"
+												value="${project.test.server.1.ldap.1.jmx.port}" />
+											<property name="ldapHost"
+												value="${project.test.server.1.ldap.1.host}" />
+											<property name="ldapPort"
+												value="${project.test.server.1.ldap.1.port}" />
+										</ant>
+										<ant
+											antfile="${project.build.testScriptSourceDirectory}/apacheds-run.xml"
+											target="apacheds-stop" inheritRefs="true">
+											<property name="instance" value="2" />
+											<property name="jmxPort"
+												value="${project.test.server.2.ldap.1.jmx.port}" />
+											<property name="ldapHost"
+												value="${project.test.server.2.ldap.1.host}" />
+											<property name="ldapPort"
+												value="${project.test.server.2.ldap.1.port}" />
+										</ant>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>start-container1</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>start</goal>
+								</goals>
+								<configuration>
+									<container>
+										<systemProperties>
+											<pdti.context.config.data.directory>${project.test.server.1.context.config.data.directory}</pdti.context.config.data.directory>
+											<pdti.context.config.data.ldap>${project.test.server.1.context.config.data.ldap}</pdti.context.config.data.ldap>
+											<pdti.context.config.data.federation>${project.test.server.1.context.config.data.federation}</pdti.context.config.data.federation>
+											<pdti.debug>true</pdti.debug>
+											<pdti.log.dir>${project.test.log.dir}</pdti.log.dir>
+											<pdti.log.file.basename>${project.test.server.1.log.file.basename}</pdti.log.file.basename>
+										</systemProperties>
+									</container>
+									<configuration>
+										<home>${project.test.server.1.jetty.config.home}</home>
+										<properties>
+											<cargo.hostname>${project.test.server.1.host}</cargo.hostname>
+											<cargo.rmi.port>${project.test.server.1.rmi.port}</cargo.rmi.port>
+											<cargo.servlet.port>${project.test.server.1.port}</cargo.servlet.port>
+										</properties>
+									</configuration>
+									<deployables>
+										<deployable>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>${project.artifactId}</artifactId>
+											<type>${project.packaging}</type>
+											<classifier>test</classifier>
+											<properties>
+												<context>/${project.test.server.1.context}</context>
+											</properties>
+										</deployable>
+									</deployables>
+								</configuration>
+							</execution>
+							<execution>
+								<id>start-container2</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>start</goal>
+								</goals>
+								<configuration>
+									<container>
+										<systemProperties>
+											<pdti.context.config.data.directory>${project.test.server.2.context.config.data.directory}</pdti.context.config.data.directory>
+											<pdti.context.config.data.ldap>${project.test.server.2.context.config.data.ldap}</pdti.context.config.data.ldap>
+											<pdti.context.config.data.federation>${project.test.server.2.context.config.data.federation}</pdti.context.config.data.federation>
+											<pdti.debug>true</pdti.debug>
+											<pdti.log.dir>${project.test.log.dir}</pdti.log.dir>
+											<pdti.log.file.basename>${project.test.server.2.log.file.basename}</pdti.log.file.basename>
+										</systemProperties>
+									</container>
+									<configuration>
+										<home>${project.test.server.2.jetty.config.home}</home>
+										<properties>
+											<cargo.hostname>${project.test.server.2.host}</cargo.hostname>
+											<cargo.rmi.port>${project.test.server.2.rmi.port}</cargo.rmi.port>
+											<cargo.servlet.port>${project.test.server.2.port}</cargo.servlet.port>
+										</properties>
+									</configuration>
+									<deployables>
+										<deployable>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>${project.artifactId}</artifactId>
+											<type>${project.packaging}</type>
+											<classifier>test</classifier>
+											<properties>
+												<context>/${project.test.server.2.context}</context>
+											</properties>
+										</deployable>
+									</deployables>
+								</configuration>
+							</execution>
+							<execution>
+								<id>stop-container1</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+								<configuration>
+									<configuration>
+										<home>${project.test.server.1.jetty.config.home}</home>
+										<properties>
+											<cargo.hostname>${project.test.server.1.host}</cargo.hostname>
+											<cargo.rmi.port>${project.test.server.1.rmi.port}</cargo.rmi.port>
+											<cargo.servlet.port>${project.test.server.1.port}</cargo.servlet.port>
+										</properties>
+									</configuration>
+								</configuration>
+							</execution>
+							<execution>
+								<id>stop-container2</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+								<configuration>
+									<configuration>
+										<home>${project.test.server.2.jetty.config.home}</home>
+										<properties>
+											<cargo.hostname>${project.test.server.2.host}</cargo.hostname>
+											<cargo.rmi.port>${project.test.server.2.rmi.port}</cargo.rmi.port>
+											<cargo.servlet.port>${project.test.server.2.port}</cargo.servlet.port>
+										</properties>
+									</configuration>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>deploy-servers</id>
+			<activation>
+				<property>
+					<name>!skipTests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>tomcat7-deploy-server1</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy-only</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>tomcat7-deploy-server2</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy-only</goal>
+								</goals>
+								<configuration combine.self="override">
+									<password>${tomcat.manager.2.password}</password>
+									<path>/${project.deploy.server.2.context}</path>
+									<url>${tomcat.manager.2.url}</url>
+									<username>${tomcat.manager.2.username}</username>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

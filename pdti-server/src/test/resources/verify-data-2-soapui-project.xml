@@ -82,7 +82,7 @@ empty(//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^HcRole$","i")]]/dsml:
 <con:assertion type="XPath Match" name="attr HcSpecialization XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr[@name[matches(.,"^HcSpecialization$","i")]]/dsml:value</path><content>Neurosurgeon</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdCredential XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^hpdCredential$","i")]]/dsml:value</path><content>hpdCredentialId=100,ou=Credentials,o=dev2.provider-directories.com,dc=hpd</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^hpdCredential$","i")]]/dsml:value</path><content>hpdCredentialId=100,ou=HPDCredential,o=dev2.provider-directories.com,dc=hpd</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdHasAService XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 empty(//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^hpdHasAService$","i")]]/dsml:value)</path><content>true</content>><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdProviderBillingAddress XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
@@ -239,7 +239,7 @@ empty(//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^hpdproviderstatus$","
    <soap-env:Body>
       <hpdplus:hpdPlusRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:hpdplus="urn:gov:hhs:onc:hpdplus:2013">
         <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <dsml:searchRequest dn="ou=Memberships,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+            <dsml:searchRequest dn="ou=HPDProviderMembership,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
                 <dsml:filter>
                    <dsml:equalityMatch name="hpdMemberId">
                       <dsml:value>${#TestCase#rdn}</dsml:value>
@@ -260,7 +260,7 @@ empty(//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^hpdproviderstatus$","
 <con:assertion type="XPath Match" name="count attr XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 count(//dsml:attr[@name!="objectClass"])</path><content>4</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="dn XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/@dn</path><content>hpdMemberId=${#TestCase#rdn},ou=Memberships,${#Project#project.test.server.dsml.dn.base}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+//dsml:searchResultEntry/@dn</path><content>hpdMemberId=${#TestCase#rdn},ou=HPDProviderMembership,${#Project#project.test.server.dsml.dn.base}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdHasAnOrg XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr[@name[matches(.,"^hpdhasanorg$","i")]]/dsml:value</path><content>hpdOrgId=org100,ou=Organizations,o=dev2.provider-directories.com,dc=hpd</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdMemberId XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
@@ -314,7 +314,7 @@ empty(//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^facsimiletelephonenum
    <soap-env:Body>
       <hpdplus:hpdPlusRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:hpdplus="urn:gov:hhs:onc:hpdplus:2013">
         <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <dsml:searchRequest dn="ou=Credentials,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+            <dsml:searchRequest dn="ou=HPDCredential,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
                 <dsml:filter>
                    <dsml:equalityMatch name="hpdCredentialId">
                       <dsml:value>${#TestCase#rdn}</dsml:value>
@@ -335,7 +335,7 @@ empty(//dsml:searchResultEntry/dsml:attr[@name[matches(.,"^facsimiletelephonenum
 <con:assertion type="XPath Match" name="count attr XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 count(//dsml:attr[@name!="objectClass"])</path><content>5</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="dn XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/@dn</path><content>hpdCredentialId=${#TestCase#rdn},ou=Credentials,${#Project#project.test.server.dsml.dn.base}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+//dsml:searchResultEntry/@dn</path><content>hpdCredentialId=${#TestCase#rdn},ou=HPDCredential,${#Project#project.test.server.dsml.dn.base}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdCredentialId XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr[@name[matches(.,"^hpdcredentialid$","i")]]/dsml:value</path><content>100</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr credentialName XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
