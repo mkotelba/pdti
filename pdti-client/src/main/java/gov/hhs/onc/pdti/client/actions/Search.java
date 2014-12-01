@@ -1,10 +1,12 @@
 package gov.hhs.onc.pdti.client.actions;
 
+import gov.hhs.onc.pdti.client.federation.xml.FederatedRequestData;
 import gov.hhs.onc.pdti.client.types.ProviderDirectoryTypes;
 import gov.hhs.onc.pdti.client.wrappers.SearchResultWrapper;
 import gov.hhs.onc.pdti.ws.api.AttributeValueAssertion;
 import gov.hhs.onc.pdti.ws.api.BatchRequest;
 import gov.hhs.onc.pdti.ws.api.BatchResponse;
+import gov.hhs.onc.pdti.ws.api.Control;
 import gov.hhs.onc.pdti.ws.api.DsmlAttr;
 import gov.hhs.onc.pdti.ws.api.ErrorResponse;
 import gov.hhs.onc.pdti.ws.api.Filter;
@@ -12,11 +14,10 @@ import gov.hhs.onc.pdti.ws.api.ProviderInformationDirectoryService;
 import gov.hhs.onc.pdti.ws.api.SearchRequest;
 import gov.hhs.onc.pdti.ws.api.SearchResponse;
 import gov.hhs.onc.pdti.ws.api.SearchResultEntry;
-import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusError;
-import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusProviderInformationDirectoryService;
-import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusRequest;
-import gov.hhs.onc.pdti.ws.api.hpdplus.HpdPlusResponse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,24 +26,18 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.interceptor.ServletRequestAware;
 
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
-import gov.hhs.onc.pdti.ws.api.Control;
-import gov.hhs.onc.pdti.client.federation.xml.FederatedRequestData;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-
-import javax.servlet.http.HttpServletRequest;
-import org.apache.struts2.interceptor.ServletRequestAware;
 
 public class Search extends BaseAction implements ServletRequestAware {
 
@@ -67,8 +62,6 @@ public class Search extends BaseAction implements ServletRequestAware {
     private final String defaultUrl = getText(WSDL_PROPERTY_NAME);
 
     private gov.hhs.onc.pdti.ws.api.ObjectFactory dsmlBasedObjectFactory = new gov.hhs.onc.pdti.ws.api.ObjectFactory();
-    private gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory hpdPlusObjectFactory
-            = new gov.hhs.onc.pdti.ws.api.hpdplus.ObjectFactory();
 
     private String url;
     private String providerDirectoryType;
@@ -115,8 +108,6 @@ public class Search extends BaseAction implements ServletRequestAware {
 
         if (providerDirectoryType.equals(ProviderDirectoryTypes.DSML_WSDL.toString())) {
             doDsmlSearch(wsdlUrl);
-        } else if (providerDirectoryType.equals(ProviderDirectoryTypes.HPDPlus.toString())) {
-            doHpdPlusSearch(wsdlUrl);
         } else {
             String errorMessage = PD_TYPE_ERROR_MESSAGE_PREAMBLE + providerDirectoryType + PERIOD;
             LOGGER.error(errorMessage);
@@ -131,51 +122,6 @@ public class Search extends BaseAction implements ServletRequestAware {
         } else {
             return SUCCESS;
         }
-    }
-
-    private void doHpdPlusSearch(URL wsdlUrl) {
-        LOGGER.debug("doHpdPlusSearch(URL)");
-        HpdPlusProviderInformationDirectoryService hpdPlusProviderInformationDirectoryService
-                = new HpdPlusProviderInformationDirectoryService(wsdlUrl);
-        HpdPlusResponse hpdPlusResponse = hpdPlusProviderInformationDirectoryService
-                .getHpdPlusProviderInformationDirectoryPortSoap()
-                .hpdPlusProviderInformationQueryRequest(buildHpdPlusRequest());
-        hpdPlusResponse.setDirectoryUri(wsdlUrl.toString());
-        processHpdPlusResponse(hpdPlusResponse);
-    }
-
-    private void processHpdPlusResponse(HpdPlusResponse hpdPlusResponse) {
-        LOGGER.debug("processHpdPlusResponse(HpdPlusResponse)");
-        List<HpdPlusError> hpdPlusErrors = hpdPlusResponse.getErrors();
-        if (null != hpdPlusErrors && hpdPlusErrors.size() > 0) {
-            for (HpdPlusError hpdPlusError : hpdPlusErrors) {
-                searchErrorMessages.add(hpdPlusError.getMessage());
-            }
-        }
-        List<Object> responseItems = hpdPlusResponse.getResponseItems();
-        for (Object object : responseItems) {
-            if (object instanceof BatchResponse) {
-                processBatchResponse(hpdPlusResponse.getDirectoryId(), hpdPlusResponse.getDirectoryUri(), (BatchResponse) object);
-            } else if (object instanceof HpdPlusResponse) {
-                processHpdPlusResponse((HpdPlusResponse) object);
-            } else {
-                searchErrorMessages.add(
-                        HPDPLUS_RESPONSE_ITEM_TYPE_ERROR_MESSAGE_PREAMBLE + object.getClass().getName());
-            }
-        }
-    }
-
-    private HpdPlusRequest buildHpdPlusRequest() {
-        LOGGER.debug("buildHpdPlusRequest()");
-        HpdPlusRequest hpdPlusRequest = hpdPlusObjectFactory.createHpdPlusRequest();
-        if (Boolean.TRUE.equals(isShowDetails())) {
-            hpdPlusRequest.setRequestId(UUID.randomUUID().toString());
-        } else {
-            hpdPlusRequest.setRequestId(requestId);
-        }
-        LOGGER.debug("HpdPlusRequest.requestId =" + requestId + "=");
-        hpdPlusRequest.setBatchRequest(buildBatchRequest(true));
-        return hpdPlusRequest;
     }
 
     private void doDsmlSearch(URL wsdlUrl) {
