@@ -42,7 +42,6 @@ public class Execute extends ActionSupport {
     private static final String BASE_DN_STRING_PARAM_NAME = "baseDn";
     private static final String DIRECTORY_TYPE_PARAM_NAME = "typeOfDirectory";
     private static final String REQUIRED_FIELD_MESSAGE = "This field is required.";
-    private static final String MSPD_SOAPUI_PROJECT_FILE = "soapui-project_hpdplus.xml";
     private static final String IHE_SOAPUI_PROJECT_FILE = "soapui-project.xml";
     private static final String URL_PROPERTY = "project.test.server.wsdl.url";
     private static final String BASE_DN_PROPERTY = "project.test.server.dsml.dn.base";
@@ -59,7 +58,7 @@ public class Execute extends ActionSupport {
     private static final Map<WsdlProject, Map<String, Map<String, String>>> PROJECTS_MAP =
             new HashMap<WsdlProject, Map<String, Map<String, String>>>();
     private static final WsdlProject IHE_WSDL_PROJECT = getWsdlProject(IHE_SOAPUI_PROJECT_FILE);
-    private static final WsdlProject MSPD_WSDL_PROJECT = getWsdlProject(MSPD_SOAPUI_PROJECT_FILE);
+    
     private static final String SETTINGS_FILE_NAME = "soapui-settings.xml";
 
     private WsdlProject wsdlProject;
@@ -115,8 +114,6 @@ public class Execute extends ActionSupport {
     public String execute() {
         if (typeOfDirectory.equals(DirectoryTypes.IHE.toString())) {
             wsdlProject = IHE_WSDL_PROJECT;
-        } else if (typeOfDirectory.equals(DirectoryTypes.MSPD.toString())) {
-            wsdlProject = MSPD_WSDL_PROJECT;
         } else {
             String errorMessage = typeOfDirectory + BAD_DIRECTORY_TYPE_MESSAGE_FRAGMENT;
             LOGGER.error(errorMessage);
