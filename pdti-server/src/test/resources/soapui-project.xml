@@ -436,7 +436,7 @@
 <con:assertion type="XPath Match" name="attr hpdProviderLegalAddress XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="hpdproviderlegaladdress"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr HCSpecialization XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/dsml:attr/lower-case(@name)="hcspecialization"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+//dsml:searchResultEntry/dsml:attr/lower-case(@name)="hcspecialisation"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr givenName XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="givenname"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdProviderLanguageSupported XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
@@ -475,15 +475,14 @@
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="hpdcredential"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdProviderStatus XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="hpdproviderstatus"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
-<con:assertion type="XPath Match" name="attr HcRole XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/dsml:attr/lower-case(@name)="hcrole"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+
 <con:assertion type="XPath Match" name="count attr XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-count(//dsml:attr)</path><content>26</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+count(//dsml:attr)</path><content>25</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:credentials>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -512,8 +511,8 @@ count(//dsml:attr)</path><content>26</content><allowWildcards>false</allowWildca
       <dsml:batchRequest requestID="${=project.name}_${=testSuite.name}_${=testCase.name}_${=testStep.name}_${=request.name}_${=UUID.randomUUID()}" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
          <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
-               <dsml:equalityMatch name="hpdOrgId">
-                  <dsml:value>org1</dsml:value>
+               <dsml:equalityMatch name="o">
+                  <dsml:value>Dr. Thomas Jones' Private Practice</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
                 <!--dsml:attributes>
@@ -541,14 +540,13 @@ count(//dsml:attr)</path><content>26</content><allowWildcards>false</allowWildca
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="telephonenumber"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr HcIdentifier XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="hcidentifier"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
-<con:assertion type="XPath Match" name="attr hpdOrgId XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/dsml:attr/lower-case(@name)="hpdorgid"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+
 <con:assertion type="XPath Match" name="attr ClinicalInformationContact XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="clinicalinformationcontact"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr HcRegisteredName XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="hcregisteredname"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr HcSpecialization XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/dsml:attr/lower-case(@name)="hcspecialization"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+//dsml:searchResultEntry/dsml:attr/lower-case(@name)="hcspecialisation"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdCredential XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="hpdcredential"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr hpdHasAService XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
@@ -571,7 +569,7 @@ count(//dsml:attr)</path><content>19</content><allowWildcards>false</allowWildca
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -601,7 +599,7 @@ count(//dsml:attr)</path><content>19</content><allowWildcards>false</allowWildca
          <dsml:searchRequest dn="ou=HPDProviderMembership,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasAProvider">
-                  <dsml:value>HcIdentifier=provider1,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
+                  <dsml:value>uid=2.16.840.1.113883.3.4295:provider1,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <!--dsml:attributes>
@@ -641,7 +639,7 @@ count(//dsml:attr)</path><content>10</content><allowWildcards>false</allowWildca
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -703,7 +701,7 @@ count(//dsml:attr)</path><content>6</content><allowWildcards>false</allowWildcar
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -756,7 +754,7 @@ count(//dsml:attr)</path><content>6</content><allowWildcards>false</allowWildcar
 <con:assertion type="XPath Match" name="attr credentialType XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="credentialtype"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr description XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
-//dsml:searchResultEntry/dsml:attr/lower-case(@name)="credentialDescription"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
+//dsml:searchResultEntry/dsml:attr/lower-case(@name)="credentialdescription"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr credentialIssueDate XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
 //dsml:searchResultEntry/dsml:attr/lower-case(@name)="credentialissuedate"</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion>
 <con:assertion type="XPath Match" name="attr credentialRenewalDate XPath Match"><con:configuration><path>declare namespace dsml='urn:oasis:names:tc:DSML:2:0:core';
@@ -773,7 +771,7 @@ count(//dsml:attr)</path><content>11</content><allowWildcards>false</allowWildca
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -837,7 +835,7 @@ count(//dsml:attr)</path><content>1</content><allowWildcards>false</allowWildcar
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -1670,7 +1668,7 @@ Request a specific individual by specifying the individual unique reference ID.<
          <dsml:searchRequest dn="ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
-                  <dsml:value>provider3</dsml:value>
+                  <dsml:value>2.16.840.1.113883.4.6:npi:1111111113:Active</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
@@ -1714,7 +1712,7 @@ Request a specific individual by specifying the individual unique reference ID.<
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -1780,7 +1778,7 @@ organization attributes.</con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -1919,7 +1917,7 @@ organization unique reference ID.</con:description><con:settings/><con:testStep 
          <dsml:searchRequest dn="ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="HcIdentifier">
-                  <dsml:value>org4</dsml:value>
+                  <dsml:value>2.16.840.1.113883.3.4295:LocalId:1111115:Active</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
@@ -1955,7 +1953,7 @@ organization unique reference ID.</con:description><con:settings/><con:testStep 
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2081,7 +2079,7 @@ specified individual are returned when the organization matches the organization
 has a relationship to the individual specified. Attributes on the relationship between the individual 
 and organization can also be specified in this query and further constrain which organizations and 
 relationships are returned.</con:description><con:settings/>
-      <con:testStep type="request" name="search_provider_by_HcIdentifier">
+      <con:testStep type="request" name="search_provider_by_HcIdentifier" disabled="true">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>ProviderInformationDirectory_Port_SoapBinding</con:interface>
@@ -2142,7 +2140,7 @@ relationships are returned.</con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2167,19 +2165,19 @@ relationships are returned.</con:description><con:settings/>
          <dsml:searchRequest dn="ou=HPDProviderMembership,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
                <dsml:equalityMatch name="hpdHasAProvider">
-                  <dsml:value>HcIdentifier=provider3,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
+                  <dsml:value>uid=2.16.840.1.113883.3.4295:provider3,ou=HcProfessional,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                </dsml:equalityMatch>
             </dsml:filter>
             <dsml:attributes>
-               <dsml:attribute name="hpdHasAService"/>
-               <dsml:attribute name="telephoneNumber"/>
-               <dsml:attribute name="facsimileTelephoneNumber"/>
-               <dsml:attribute name="mobile"/>
-               <dsml:attribute name="pager"/>
-               <dsml:attribute name="mail"/>
-               <dsml:attribute name="hpdHasAProvider"/>
+<!--               <dsml:attribute name="hpdHasAService"/>-->
+<!--               <dsml:attribute name="telephoneNumber"/>-->
+<!--               <dsml:attribute name="facsimileTelephoneNumber"/>-->
+<!--               <dsml:attribute name="mobile"/>-->
+<!--               <dsml:attribute name="pager"/>-->
+<!--               <dsml:attribute name="mail"/>-->
+<!--               <dsml:attribute name="hpdHasAProvider"/>-->
                <!--<dsml:attribute name="hpdHasASubOrg"/>-->
-               <dsml:attribute name="hpdMemberId"/>
+<!--               <dsml:attribute name="hpdMemberId"/>-->
                <dsml:attribute name="hpdHasAnOrg"/>
             </dsml:attributes>
          </dsml:searchRequest>
@@ -2195,7 +2193,7 @@ relationships are returned.</con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2332,7 +2330,7 @@ specified organization are returned when the individual matches the individual a
 relationship to the organization specified. Attributes on the relationship between the individual and 
 organization can also be specified in this query and further constrain which individuals and 
 relationships are returned.</con:description><con:settings/>
-      <con:testStep type="request" name="search_org_by_HcIdentifier">
+      <con:testStep type="request" name="search_org_by_HcIdentifier" disabled="true">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>ProviderInformationDirectory_Port_SoapBinding</con:interface>
@@ -2385,7 +2383,7 @@ relationships are returned.</con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2405,16 +2403,16 @@ relationships are returned.</con:description><con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>${#Project#project.test.server.wsdl.url}</con:endpoint>
             <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
-   <soap-env:Body>
+ <soap-env:Body>
       <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
          <dsml:searchRequest dn="ou=HPDProviderMembership,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
             <dsml:filter>
-               <dsml:and>
+              
                   <dsml:equalityMatch name="hpdHasAnOrg">
-                     <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>uid=2.16.840.1.113883.3.4295:org2,ou=HcRegulatedOrganization,${#Project#project.test.server.dsml.dn.base}</dsml:value>
                   </dsml:equalityMatch>
-                  <dsml:present name="hpdHasASubOrg"/>
-               </dsml:and>
+                  
+               
             </dsml:filter>
             <dsml:attributes>
                <dsml:attribute name="hpdHasAService"/>
@@ -2424,7 +2422,7 @@ relationships are returned.</con:description><con:settings/>
                <dsml:attribute name="pager"/>
                <dsml:attribute name="mail"/>
                <dsml:attribute name="hpdHasAProvider"/>
-               <!--<dsml:attribute name="hpdHasASubOrg"/>-->
+               <dsml:attribute name="hpdHasASubOrg"/>
                <dsml:attribute name="hpdMemberId"/>
                <dsml:attribute name="hpdHasAnOrg"/>
             </dsml:attributes>
@@ -2441,7 +2439,7 @@ relationships are returned.</con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2520,7 +2518,7 @@ relationships are returned.</con:description><con:settings/>
             <dsml:filter>
                <dsml:and>
                   <dsml:equalityMatch name="hpdHasAnOrg">
-                     <dsml:value>hpdOrgId=org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
+                     <dsml:value>uid=2.16.840.1.113883.3.4295:org2,ou=HcRegulatedOrganization,o=dev.provider-directories.com,dc=hpd</dsml:value>
                   </dsml:equalityMatch>
                   <dsml:present name="hpdHasAProvider"/>
                </dsml:and>
@@ -2550,7 +2548,7 @@ relationships are returned.</con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2558,7 +2556,7 @@ relationships are returned.</con:description><con:settings/>
             <con:wsrmConfig version="1.2"/>
           </con:request>
         </con:config>
-      </con:testStep><con:testStep type="request" name="search_provider_by_HcIdentifier">
+      </con:testStep><con:testStep type="request" name="search_provider_by_HcIdentifier" disabled="true">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>ProviderInformationDirectory_Port_SoapBinding</con:interface>
@@ -2624,7 +2622,7 @@ relationships are returned.</con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2705,7 +2703,7 @@ other organizations are returned. </con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2713,7 +2711,7 @@ other organizations are returned. </con:description><con:settings/>
             <con:wsrmConfig version="1.2"/>
           </con:request>
         </con:config>
-      </con:testStep><con:testStep type="request" name="search_org_by_HcIdentifier">
+      </con:testStep><con:testStep type="request" name="search_org_by_HcIdentifier" disabled="true">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>ProviderInformationDirectory_Port_SoapBinding</con:interface>
@@ -2771,7 +2769,7 @@ other organizations are returned. </con:description><con:settings/>
               <con:username xsi:nil="true"/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
-              <con:authType>Global HTTP Settings</con:authType>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
@@ -2954,6 +2952,53 @@ other organizations are returned. </con:description><con:settings/>
               <con:password xsi:nil="true"/>
               <con:domain xsi:nil="true"/>
               <con:authType>Global HTTP Settings</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep><con:properties/>
+    </con:testCase><con:testCase failOnError="false" failTestCaseOnErrors="false" keepSession="false" maxResults="0" name="Find_Members_for_Unique_Relationship" searchProperties="true">
+      <con:description/><con:settings/>
+      <con:testStep type="request" name="Find_Members_for_Unique_Relationship">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>ProviderInformationDirectory_Port_SoapBinding</con:interface>
+          <con:operation>ProviderInformationQueryRequest</con:operation>
+          <con:request name="Find_Members_for_Unique_Relationship" outgoingWss="" incomingWss="">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>${#Project#project.test.server.wsdl.url}</con:endpoint>
+            <con:request><![CDATA[<soap-env:Envelope xmlns:soap-env="http://www.w3.org/2003/05/soap-envelope">
+   <soap-env:Body>
+      <dsml:batchRequest xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         <dsml:searchRequest dn="ou=Relationship,${#Project#project.test.server.dsml.dn.base}" scope="singleLevel" derefAliases="derefFindingBaseObj">
+            <dsml:filter>
+               <dsml:equalityMatch name="cn">
+                  <dsml:value>JonesPracticeGroup</dsml:value>
+               </dsml:equalityMatch>
+            </dsml:filter>
+            <dsml:attributes>
+               <dsml:attribute name="member"/>
+            </dsml:attributes>
+         </dsml:searchRequest>
+      </dsml:batchRequest>
+   </soap-env:Body>
+</soap-env:Envelope>]]></con:request>
+            <con:assertion type="SOAP Response"/>
+            <con:assertion type="Schema Compliance">
+              <con:configuration><definition/></con:configuration>
+            </con:assertion>
+            <con:assertion type="SOAP Fault Assertion"/>
+            <con:credentials>
+              <con:username xsi:nil="true"/>
+              <con:password xsi:nil="true"/>
+              <con:domain xsi:nil="true"/>
+              <con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
             </con:credentials>
             <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
             <con:jmsPropertyConfig/>
