@@ -262,6 +262,26 @@ hpdMemberId: 5
 #==================================================
 
 #==================================================
+# START: GROUP(S)
+#==================================================
+
+dn: ou=Relationship,o=dev.provider-directories.com,dc=hpd
+objectClass: organizationalunit
+objectClass: top
+ou: Relationship
+
+dn: cn=JonesPracticeGroup,ou=Relationship,o=dev.provider-directories.com,dc=hpd
+objectClass: top
+objectClass: groupOfNames
+cn: JonesPracticeGroup
+owner: uid=2.16.840.1.113883.3.4295:org1, ou=HCRegulatedOrganization, o=dev.provider-directories.com,dc=hpd
+member: uid=2.16.840.1.113883.3.4295:provider1, ou=HCProfessional, o=dev.provider-directories.com,dc=hpd
+member: uid=2.16.840.1.113883.3.4295:provider2, ou=HCProfessional, o=dev.provider-directories.com,dc=hpd
+#==================================================
+# END: GROUP(S)
+#==================================================
+
+#==================================================
 # START: SERVICE(S)
 #==================================================
 
