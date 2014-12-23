@@ -7,7 +7,8 @@
     xmlns:hpd="urn:ihe:iti:hpd:2010"
     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" >
     <wsdl:documentation>HPD Provider Information Directory</wsdl:documentation>
     <wsdl:types>
         <xsd:schema targetNamespace="urn:oasis:names:tc:DSML:2:0:core">
@@ -15,30 +16,31 @@
         </xsd:schema>
         <xsd:schema targetNamespace="urn:ihe:iti:hpd:2010">
             <xsd:include schemaLocation="../schema/HPD/HPD.xsd"/>
+             <xsd:include schemaLocation="../schema/HPD/HPDFederatedStructures.xsd"/>
         </xsd:schema>
     </wsdl:types>
     <wsdl:message name="ProviderInformationQueryRequestMessage">
         <wsdl:documentation>Provider Information Query Request Message</wsdl:documentation>
-        <wsdl:part name="queryRequest" element="dsml:batchRequest"/>
+        <wsdl:part name="body" element="dsml:batchRequest"/>
     </wsdl:message>
     <wsdl:message name="ProviderInformationQueryResponseMessage">
         <wsdl:documentation>Provider Information Query Response Message</wsdl:documentation>
-        <wsdl:part name="queryResponse" element="dsml:batchResponse"/>
+        <wsdl:part name="body" element="dsml:batchResponse"/>
     </wsdl:message>
     <wsdl:portType name="ProviderInformationDirectory_PortType">
         <wsdl:operation name="ProviderInformationQueryRequest">
-            <wsdl:input message="hpd:ProviderInformationQueryRequestMessage" name="queryRequest"/>
-            <wsdl:output message="hpd:ProviderInformationQueryResponseMessage" name="queryResponse"/>
+            <wsdl:input message="hpd:ProviderInformationQueryRequestMessage"  wsaw:Action="urn:ihe:iti:2010:ProviderInformationQuery"/>
+            <wsdl:output message="hpd:ProviderInformationQueryResponseMessage"  wsaw:Action="urn:ihe:iti:2010:ProviderInformationQueryResponse"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="ProviderInformationDirectory_Binding" type="hpd:ProviderInformationDirectory_PortType">
         <soap12:binding style="document" transport="http://www.w3.org/2003/05/soap/bindings/HTTP/"/>
         <wsdl:operation name="ProviderInformationQueryRequest">
-            <soap12:operation soapAction="urn:ihe:iti:hpd:2010:ProviderInformationQueryRequest"/>
-            <wsdl:input name="queryRequest">
+            <soap12:operation soapAction="urn:ihe:iti:2010:ProviderInformationQuery"/>
+            <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
-            <wsdl:output name="queryResponse">
+            <wsdl:output>
                 <soap12:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>

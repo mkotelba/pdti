@@ -1,123 +1,122 @@
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
-    <modelVersion>4.0.0</modelVersion>
-    
-    <parent>
-        <groupId>gov.hhs.onc.pdti</groupId>
-        <artifactId>pdti-parent</artifactId>
-        <version>1.3-SNAPSHOT</version>
-        <relativePath>pdti</relativePath>
-    </parent>
-    
-    <artifactId>pdti-ws</artifactId>
-    <packaging>jar</packaging>
-    
-    <name>pdti-ws</name>
-    <description>Provider Directories Test Implementation (PDTI) web services-related artifacts.</description>
-    <url>http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
-    
-    <scm>
-        <url>http://code.google.com/p/pdti/source/browse/${project.artifactId}/</url>
-        <developerConnection>scm:hg:https://code.google.com/p/pdti/</developerConnection>
-        <connection>scm:hg:http://code.google.com/p/pdti/</connection>
-    </scm>
-    
-    <distributionManagement>
-        <site>
-            <id>api.provider-directories.com</id>
-            <name>api.provider-directories.com</name>
-            <url>dav:http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
-        </site>
-    </distributionManagement>
-    
-    <dependencies>
-        <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics-annotate</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.jax-ws-commons.spring</groupId>
-            <artifactId>jaxws-spring</artifactId>
-        </dependency>
-    </dependencies>
-   
-    <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/jaxws</directory>
-                <includes>
-                    <include>**/*.xjb</include>
-                </includes>
-                <targetPath>META-INF/jaxws</targetPath>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/src/schema</directory>
-                <includes>
-                    <include>**/*.xsd</include>
-                </includes>
-                <targetPath>META-INF/schema</targetPath>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/src/wsdl</directory>
-                <includes>
-                    <include>**/*.wsdl</include>
-                </includes>
-                <targetPath>META-INF/wsdl</targetPath>
-            </resource>
-        </resources>
-        
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <ant antfile="${project.build.scriptSourceDirectory}/wsimport-fix.xml"
-                                    target="remove-package-descriptors" inheritRefs="true"/>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jvnet.jax-ws-commons</groupId>
-                <artifactId>jaxws-maven-plugin</artifactId>
-                <version>2.2</version>
-                <executions>
-                    <execution>
-                        <id>wsimport</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                        <configuration>
-                            <bindingFiles>
-                                <bindingFile>global.xjb</bindingFile>
-                                <bindingFile>DSMLv2.xjb</bindingFile>
-                                <bindingFile>HPD.xjb</bindingFile>
-                                <bindingFile>HPD_ProviderInformationDirectory.xjb</bindingFile>
-                            </bindingFiles>
-                            <wsdlFiles>
-                                <wsdlFile>HPD_ProviderInformationDirectory.wsdl</wsdlFile>
-                            </wsdlFiles>
-                            <wsdlLocation>META-INF/wsdl/HPD_ProviderInformationDirectory.wsdl</wsdlLocation>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>gov.hhs.onc.pdti</groupId>
+		<artifactId>pdti-parent</artifactId>
+		<version>1.3-SNAPSHOT</version>
+		<relativePath>pdti</relativePath>
+	</parent>
+
+	<artifactId>pdti-ws</artifactId>
+	<packaging>jar</packaging>
+
+	<name>pdti-ws</name>
+	<description>Provider Directories Test Implementation (PDTI) web services-related artifacts.</description>
+	<url>http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
+
+	<scm>
+		<url>http://code.google.com/p/pdti/source/browse/${project.artifactId}/</url>
+		<developerConnection>scm:hg:https://code.google.com/p/pdti/</developerConnection>
+		<connection>scm:hg:http://code.google.com/p/pdti/</connection>
+	</scm>
+
+	<distributionManagement>
+		<site>
+			<id>api.provider-directories.com</id>
+			<name>api.provider-directories.com</name>
+			<url>dav:http://api.provider-directories.com/${project.artifactId}/${project.version}/</url>
+		</site>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-basics-annotate</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-basics-runtime</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jax-ws-commons.spring</groupId>
+			<artifactId>jaxws-spring</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/jaxws</directory>
+				<includes>
+					<include>**/*.xjb</include>
+				</includes>
+				<targetPath>META-INF/jaxws</targetPath>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/src/schema</directory>
+				<includes>
+					<include>**/*.xsd</include>
+				</includes>
+				<targetPath>META-INF/schema</targetPath>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/src/wsdl</directory>
+				<includes>
+					<include>**/*.wsdl</include>
+				</includes>
+				<targetPath>META-INF/wsdl</targetPath>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<ant antfile="${project.build.scriptSourceDirectory}/wsimport-fix.xml"
+									target="remove-package-descriptors" inheritRefs="true" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jvnet.jax-ws-commons</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>wsimport</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<bindingFiles>
+								<bindingFile>global.xjb</bindingFile>
+								<bindingFile>DSMLv2.xjb</bindingFile>
+								<bindingFile>HPD.xjb</bindingFile>
+								<!-- <bindingFile>HPDFederatedStructures.xjb</bindingFile> -->
+								<bindingFile>HPD_ProviderInformationDirectory.xjb</bindingFile>
+							</bindingFiles>
+							<wsdlFiles>
+								<wsdlFile>HPD_ProviderInformationDirectory.wsdl</wsdlFile>
+							</wsdlFiles>
+							<wsdlLocation>META-INF/wsdl/HPD_ProviderInformationDirectory.wsdl</wsdlLocation>
+						</configuration>
+					</execution>
+				</executions>
+				
+			</plugin>
+		</plugins>
+	</build>
 </project>
