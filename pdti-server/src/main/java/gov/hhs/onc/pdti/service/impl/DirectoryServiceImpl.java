@@ -6,35 +6,28 @@ import gov.hhs.onc.pdti.DirectoryType;
 import gov.hhs.onc.pdti.DirectoryTypeId;
 import gov.hhs.onc.pdti.data.DirectoryDataService;
 import gov.hhs.onc.pdti.data.DirectoryDescriptor;
-import gov.hhs.onc.pdti.data.federation.FederationService;
 import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorException;
 import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorNoOpException;
-import gov.hhs.onc.pdti.interceptor.DirectoryRequestInterceptor;
-import gov.hhs.onc.pdti.interceptor.DirectoryResponseInterceptor;
 import gov.hhs.onc.pdti.service.DirectoryService;
+import gov.hhs.onc.pdti.service.FederationService;
+import gov.hhs.onc.pdti.service.base.AbstractDirectoryService;
 import gov.hhs.onc.pdti.statistics.entity.PDTIStatisticsEntity;
 import gov.hhs.onc.pdti.statistics.service.PdtiAuditService;
 import gov.hhs.onc.pdti.util.DirectoryUtils;
 import gov.hhs.onc.pdti.ws.api.BatchRequest;
 import gov.hhs.onc.pdti.ws.api.BatchResponse;
 import gov.hhs.onc.pdti.ws.api.Control;
-import gov.hhs.onc.pdti.ws.api.DsmlMessage;
-import gov.hhs.onc.pdti.ws.api.ErrorResponse.ErrorType;
 import gov.hhs.onc.pdti.ws.api.FederatedResponseStatus;
 import gov.hhs.onc.pdti.ws.api.FederatedSearchResponseData;
-import gov.hhs.onc.pdti.ws.api.ObjectFactory;
 import gov.hhs.onc.pdti.ws.api.SearchResponse;
 import gov.hhs.onc.pdti.ws.api.SearchResultEntryMetadata;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.SortedSet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -55,13 +48,6 @@ import org.springframework.stereotype.Service;
 public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest, BatchResponse> implements DirectoryService<BatchRequest, BatchResponse> {
 
 	private final static Logger LOGGER = Logger.getLogger(DirectoryServiceImpl.class);
-	private static String iheoid = "";
-	@Autowired
-	@DirectoryStandard(DirectoryStandardId.IHE)
-	private ObjectFactory objectFactory;
-	private static String dirStaticId = "";
-	private static String staticWsdlUrl = "";
-	private boolean isFederatedRequest = false;
 
 	@Autowired
 	PdtiAuditService pdtiAuditLogService;
@@ -70,8 +56,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 	public BatchResponse processRequest(BatchRequest batchReq) {
 		DirectoryInterceptorNoOpException noOpException = null;
 		boolean isError = false;
-		InputStream input = null;
-		Properties prop = new Properties();
 		String dirId = this.dirDesc.getDirectoryId();
 		String wsdlUrl = this.dirDesc.getWsdlLocation().toString();
 		dirStaticId = dirId;
@@ -88,9 +72,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 			try {
 				this.interceptRequests(dirDesc, dirId, reqId, batchReq, batchResp);
 				batchReqStr = this.dirJaxb2Marshaller.marshal(this.objectFactory.createBatchRequest(batchReq));
-				input = getClass().getClassLoader().getResourceAsStream("federationinfo.properties");
-				prop.load(input);
-				iheoid = prop.getProperty("ihefederationoid");
 			} catch (DirectoryInterceptorNoOpException e) {
 				noOpException = e;
 			} catch (DirectoryInterceptorException e) {
@@ -99,15 +80,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 			} catch (Throwable th) {
 				isError = true;
 				this.addError(dirId, reqId, batchResp, th);
-			} finally {
-				if (null != input) {
-					try {
-						input.close();
-					} catch (IOException e) {
-						isError = true;
-						this.addError(dirId, reqId, batchResp, e);
-					}
-				}
 			}
 
 			if (noOpException != null) {
@@ -123,10 +95,11 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 				} else if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Processing DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + ").");
 				}
-				getFederatedRequestId(batchReq);
+
+				getFederationOid("federationinfo.properties", "ihefederationoid");
 				//If Federation is enabled, then a local ldap call and Federation both should happen.. 
 				//In the else part only local Directory will be searched.
-				if (isFederatedRequest) {
+				if (isFederatedRequest(batchReq)) {
 					if (this.dataServices != null) {
 						for (DirectoryDataService<?> dataService : this.dataServices) {
 							try {
@@ -159,7 +132,8 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 					}
 				}
 			}
-		} catch (XmlMappingException e) {
+		} catch (XmlMappingException | IOException e) {
+			isError = true;
 			this.addError(dirId, reqId, batchResp, e);
 		}
 		try {
@@ -191,180 +165,128 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 		return batchResp;
 	}
 
-	/**
-	 *
-	 * @param batchResp
-	 * @param batchRespCombine
-	 */
-	private void combineFederatedBatchResponses(BatchResponse batchResp, BatchRequest batchRequest) {
-		int count = batchResp.getBatchResponses().size();
-		int responseCount = 0;
-		Control searchResultEntryCtrl = buildSearchResultEntryMetadaCtrl(batchRequest);
-		Control federatedResponseDataCtrl = buildFederatedResponseDataCtrl(batchRequest);
-		while (responseCount < count) {
-			if (batchResp.getBatchResponses().get(responseCount).getValue() instanceof SearchResponse) {
-				((SearchResponse) batchResp.getBatchResponses().get(responseCount).getValue()).getSearchResultDone().getControl().add(federatedResponseDataCtrl);
-				int entryCount = 0;
-				int totalEntryCount = ((SearchResponse) batchResp.getBatchResponses().get(responseCount).getValue()).getSearchResultEntry().size();
-				while (entryCount < totalEntryCount) {
-					((SearchResponse) batchResp.getBatchResponses().get(responseCount).getValue()).getSearchResultEntry().get(entryCount).getControl().add(searchResultEntryCtrl);
-					entryCount++;
-				}
-			}
-			responseCount++;
-		}
-	}
-
-	/**
-	 *
-	 * @param batchReq
-	 * @return boolean
-	 */
-	private boolean getFederatedRequestId(BatchRequest batchReq) {
-		if (null != batchReq && null != batchReq.getBatchRequests() && batchReq.getBatchRequests().size() > 0) {
-			DsmlMessage dsml = batchReq.getBatchRequests().get(0);
-			if (null != dsml && null != dsml.getControl() && dsml.getControl().size() > 0) {
-				Control ctrl = dsml.getControl().get(0);
-				if (null != dsml.getControl().get(0).getControlValue()) {
-					if(ctrl.getType().equals(iheoid)) {
-						isFederatedRequest = true;
+	private void getFederationOid(String propertiesFileName, String property) throws IOException {
+		InputStream input = null;
+		Properties prop = new Properties();
+		try {
+			input = getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+			prop.load(input);
+			iheoid = prop.getProperty(property);
+		}finally {
+				if (null != input) {
+					try {
+						input.close();
+					} catch (IOException e) {
+						throw e;
 					}
 				}
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace(ctrl.getType());
-					LOGGER.trace("isFederatedRequest = " + isFederatedRequest);
-				} else if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug(ctrl.getType());
-					LOGGER.trace("isFederatedRequest = " + isFederatedRequest);
-				}
 			}
 		}
-		return isFederatedRequest;
-	}
 
-	@Override
-	protected void addError(String dirId, String reqId, BatchResponse batchResp, Throwable th) {
-		// TODO: improve error handling
-		batchResp.getBatchResponses().add(this.objectFactory.createBatchResponseErrorResponse(this.errBuilder.buildErrorResponse(reqId, ErrorType.OTHER, th)));
-	}
-
-	private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) {
-		for (BatchResponse batchRespCombineItem : batchRespCombine) {
-			batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+		/**
+		 *
+		 * @param batchResp
+		 * @param batchRespCombine
+		 */
+		private void combineFederatedBatchResponses(BatchResponse batchResp, BatchRequest batchRequest) {
+			int count = batchResp.getBatchResponses().size();
+			int responseCount = 0;
+			Control searchResultEntryCtrl = buildSearchResultEntryMetadaCtrl(batchRequest);
+			Control federatedResponseDataCtrl = buildFederatedResponseDataCtrl(batchRequest);
+			while (responseCount < count) {
+				if (batchResp.getBatchResponses().get(responseCount).getValue() instanceof SearchResponse) {
+					((SearchResponse) batchResp.getBatchResponses().get(responseCount).getValue()).getSearchResultDone().getControl().add(federatedResponseDataCtrl);
+					int entryCount = 0;
+					int totalEntryCount = ((SearchResponse) batchResp.getBatchResponses().get(responseCount).getValue()).getSearchResultEntry().size();
+					while (entryCount < totalEntryCount) {
+						((SearchResponse) batchResp.getBatchResponses().get(responseCount).getValue()).getSearchResultEntry().get(entryCount).getControl().add(searchResultEntryCtrl);
+						entryCount++;
+					}
+				}
+				responseCount++;
+			}
 		}
-	}
 
-	/**
-	 *
-	 * @param batchRequest
-	 * @return Control
-	 */
-	private Control buildFederatedResponseDataCtrl(BatchRequest batchRequest) {
-
-		Control ctrl = new Control();
-		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.8");
-		ctrl.setCriticality(false);
-
-		try {
-			StringWriter stringWriter = new StringWriter();
-			JAXBContext jaxbContext = JAXBContext.newInstance(FederatedSearchResponseData.class);
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-			FederatedResponseStatus oStatus = this.objectFactory.createFederatedResponseStatus();
-			oStatus.setDirectoryId(dirStaticId);
-			oStatus.setFederatedRequestId(iheoid);
-			oStatus.setResultMessage("Success");
-
-			FederatedSearchResponseData federatedSearchResponseData = this.objectFactory.createFederatedSearchResponseData();
-			federatedSearchResponseData.setFederatedResponseStatus(oStatus);
-
-			QName qName = new QName("gov.hhs.onc.pdti.ws.api", "federatedSearchResponseData");
-			JAXBElement<FederatedSearchResponseData> root = new JAXBElement<FederatedSearchResponseData>(qName, FederatedSearchResponseData.class, federatedSearchResponseData);
-			jaxbMarshaller.marshal(root, stringWriter);			
-			ctrl.setControlValue(new String(Base64.encodeBase64(stringWriter.toString().getBytes())));
-		} catch (JAXBException e) {
-			e.printStackTrace();
+		private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) {
+			for (BatchResponse batchRespCombineItem : batchRespCombine) {
+				batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+			}
 		}
-		return ctrl;
-	}
 
-	/**
-	 *
-	 * @param batchRequest
-	 * @return Control
-	 */
-	private Control buildSearchResultEntryMetadaCtrl(BatchRequest batchRequest) {
-		Control ctrl = new Control();
-		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.7");
-		ctrl.setCriticality(false);
-		try {
-			StringWriter stringWriter = new StringWriter();
-			JAXBContext jaxbContext = JAXBContext.newInstance(SearchResultEntryMetadata.class);
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			SearchResultEntryMetadata searchResultEntryMetadata = this.objectFactory.createSearchResultEntryMetadata();
-			searchResultEntryMetadata.setDirectoryId(dirStaticId);
-			searchResultEntryMetadata.setDirectoryURI(staticWsdlUrl);
+		/**
+		 *
+		 * @param batchRequest
+		 * @return Control
+		 */
+		private Control buildFederatedResponseDataCtrl(BatchRequest batchRequest) {
+			Control ctrl = new Control();
+			ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.8");
+			ctrl.setCriticality(false);
 
-			QName qName = new QName("gov.hhs.onc.pdti.ws.api", "searchResultEntryMetadata");
-			JAXBElement<SearchResultEntryMetadata> root = new JAXBElement<SearchResultEntryMetadata>(qName, SearchResultEntryMetadata.class, searchResultEntryMetadata);
-			jaxbMarshaller.marshal(root, stringWriter);			
-			ctrl.setControlValue(new String(Base64.encodeBase64(stringWriter.toString().getBytes())));
+			try {
+				StringWriter stringWriter = new StringWriter();
+				JAXBContext jaxbContext = JAXBContext.newInstance(FederatedSearchResponseData.class);
+				Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-		} catch (JAXBException e) {
-			e.printStackTrace();
+				FederatedResponseStatus oStatus = this.objectFactory.createFederatedResponseStatus();
+				oStatus.setDirectoryId(dirStaticId);
+				oStatus.setFederatedRequestId(iheoid);
+				oStatus.setResultMessage("Success");
+
+				FederatedSearchResponseData federatedSearchResponseData = this.objectFactory.createFederatedSearchResponseData();
+				federatedSearchResponseData.setFederatedResponseStatus(oStatus);
+
+				QName qName = new QName("gov.hhs.onc.pdti.ws.api", "federatedSearchResponseData");
+				JAXBElement<FederatedSearchResponseData> root = new JAXBElement<FederatedSearchResponseData>(qName, FederatedSearchResponseData.class, federatedSearchResponseData);
+				jaxbMarshaller.marshal(root, stringWriter);			
+				ctrl.setControlValue(new String(Base64.encodeBase64(stringWriter.toString().getBytes())));
+			} catch (JAXBException e) {
+				e.printStackTrace();
+			}
+			return ctrl;
 		}
-		return ctrl;
-	}
 
-	private static byte[] convertFederatedSearchResponseToBytes(String fedSearchResp) {
-		return convertToBytes(fedSearchResp);
-	}
+		/**
+		 *
+		 * @param batchRequest
+		 * @return Control
+		 */
+		private Control buildSearchResultEntryMetadaCtrl(BatchRequest batchRequest) {
+			Control ctrl = new Control();
+			ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.7");
+			ctrl.setCriticality(false);
+			try {
+				StringWriter stringWriter = new StringWriter();
+				JAXBContext jaxbContext = JAXBContext.newInstance(SearchResultEntryMetadata.class);
+				Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+				SearchResultEntryMetadata searchResultEntryMetadata = this.objectFactory.createSearchResultEntryMetadata();
+				searchResultEntryMetadata.setDirectoryId(dirStaticId);
+				searchResultEntryMetadata.setDirectoryURI(staticWsdlUrl);
 
-	private static byte[] convertSearchResultEntryMetadataToBytes(SearchResultEntryMetadata searchResMetadata) {
-		return convertToBytes(searchResMetadata);
-	}
+				QName qName = new QName("gov.hhs.onc.pdti.ws.api", "searchResultEntryMetadata");
+				JAXBElement<SearchResultEntryMetadata> root = new JAXBElement<SearchResultEntryMetadata>(qName, SearchResultEntryMetadata.class, searchResultEntryMetadata);
+				jaxbMarshaller.marshal(root, stringWriter);			
+				ctrl.setControlValue(new String(Base64.encodeBase64(stringWriter.toString().getBytes())));
 
-	/**
-	 *
-	 * @param resData
-	 * @return byte
-	 */
-	private static byte[] convertToBytes(Object resData) {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			new ObjectOutputStream(bos).writeObject(resData);
-		} catch (IOException e) {
-			LOGGER.error(e);
-		} 
-		return Base64.encodeBase64(bos.toByteArray());
-	}
+			} catch (JAXBException e) {
+				e.printStackTrace();
+			}
+			return ctrl;
+		}
 
-	@Autowired
-	@DirectoryStandard(DirectoryStandardId.IHE)
-	@DirectoryType(DirectoryTypeId.MAIN)
-	@Override
-	protected void setDirectoryDescriptor(DirectoryDescriptor dirDesc) {
-		this.dirDesc = dirDesc;
-	}
+		@Autowired
+		@DirectoryStandard(DirectoryStandardId.IHE)
+		@DirectoryType(DirectoryTypeId.MAIN)
+		@Override
+		protected void setDirectoryDescriptor(DirectoryDescriptor dirDesc) {
+			this.dirDesc = dirDesc;
+		}
 
-	@Autowired
-	@DirectoryStandard(DirectoryStandardId.IHE)
-	@Override
-	protected void setFederationService(FederationService<BatchRequest, BatchResponse> fedService) {
-		this.fedService = fedService;
-	}
+		@Autowired
+		@DirectoryStandard(DirectoryStandardId.IHE)
+		@Override
+		protected void setFederationService(FederationService<BatchRequest, BatchResponse> fedService) {
+			this.fedService = fedService;
+		}
 
-	@Autowired(required = false)
-	@DirectoryStandard(DirectoryStandardId.IHE)
-	@Override
-	protected void setRequestInterceptors(SortedSet<DirectoryRequestInterceptor<BatchRequest, BatchResponse>> reqInterceptors) {
-		this.reqInterceptors = reqInterceptors;
 	}
-
-	@Autowired(required = false)
-	@DirectoryStandard(DirectoryStandardId.IHE)
-	@Override
-	protected void setResponseInterceptors(SortedSet<DirectoryResponseInterceptor<BatchRequest, BatchResponse>> respInterceptors) {
-		this.respInterceptors = respInterceptors;
-	}
-}

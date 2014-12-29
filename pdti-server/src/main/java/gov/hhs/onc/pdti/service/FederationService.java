@@ -1,6 +1,8 @@
-package gov.hhs.onc.pdti.data.federation;
+package gov.hhs.onc.pdti.service;
 
 import gov.hhs.onc.pdti.data.DirectoryDescriptor;
+import gov.hhs.onc.pdti.service.exception.DirectoryFederationException;
+
 import java.util.List;
 
 public interface FederationService<T, U> {
