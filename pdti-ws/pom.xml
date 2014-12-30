@@ -5,8 +5,9 @@
 
 	<parent>
 		<groupId>gov.hhs.onc.pdti</groupId>
-		<artifactId>pdti</artifactId>
+		<artifactId>pdti-parent</artifactId>
 		<version>1.3-SNAPSHOT</version>
+		<relativePath>pdti</relativePath>
 	</parent>
 
 	<artifactId>pdti-ws</artifactId>

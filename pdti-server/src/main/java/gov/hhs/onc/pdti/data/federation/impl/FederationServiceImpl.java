@@ -1,4 +1,4 @@
-package gov.hhs.onc.pdti.service.impl;
+package gov.hhs.onc.pdti.data.federation.impl;
 
 
 import gov.hhs.onc.pdti.DirectoryStandard;
@@ -6,25 +6,29 @@ import gov.hhs.onc.pdti.DirectoryStandardId;
 import gov.hhs.onc.pdti.DirectoryType;
 import gov.hhs.onc.pdti.DirectoryTypeId;
 import gov.hhs.onc.pdti.data.DirectoryDescriptor;
+import gov.hhs.onc.pdti.data.federation.DirectoryFederationException;
+import gov.hhs.onc.pdti.data.federation.FederationService;
 import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorException;
 import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorNoOpException;
-import gov.hhs.onc.pdti.service.FederationService;
-import gov.hhs.onc.pdti.service.base.AbstractFederationService;
-import gov.hhs.onc.pdti.service.exception.DirectoryFederationException;
+import gov.hhs.onc.pdti.interceptor.DirectoryRequestInterceptor;
+import gov.hhs.onc.pdti.interceptor.DirectoryResponseInterceptor;
 import gov.hhs.onc.pdti.ws.api.BatchRequest;
 import gov.hhs.onc.pdti.ws.api.BatchResponse;
 import gov.hhs.onc.pdti.ws.api.Control;
 import gov.hhs.onc.pdti.ws.api.FederatedResponseStatus;
 import gov.hhs.onc.pdti.ws.api.FederatedSearchResponseData;
-import gov.hhs.onc.pdti.ws.api.ProviderInformationDirectoryService;
 import gov.hhs.onc.pdti.ws.api.SearchResponse;
 import gov.hhs.onc.pdti.ws.api.SearchResultEntryMetadata;
+import gov.hhs.onc.pdti.ws.api.ErrorResponse.ErrorType;
+import gov.hhs.onc.pdti.ws.api.ObjectFactory;
+import gov.hhs.onc.pdti.ws.api.ProviderInformationDirectoryService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Properties;
+import java.util.SortedSet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -44,10 +48,18 @@ import org.springframework.stereotype.Service;
 public class FederationServiceImpl extends AbstractFederationService<BatchRequest, BatchResponse> implements FederationService<BatchRequest, BatchResponse> {
     private final static Logger LOGGER = Logger.getLogger(FederationServiceImpl.class);
 
+    @Autowired
+    @DirectoryStandard(DirectoryStandardId.IHE)
+    private ObjectFactory objectFactory;
+    
+    private static String dirStaticId = "";
+	private static String staticWsdlUrl = "";
+	
+	private static String iheoid = "";
+
     @Override
     public BatchResponse federate(DirectoryDescriptor fedDir, BatchRequest batchReq) throws DirectoryFederationException {
-        String fedDirId = fedDir.getDirectoryId(), 
-        		reqId = batchReq.getRequestId();
+        String fedDirId = fedDir.getDirectoryId(), reqId = batchReq.getRequestId();
         BatchRequest fedBatchReq = (BatchRequest) batchReq.clone();
         BatchResponse fedBatchResp = this.objectFactory.createBatchResponse();
         DirectoryInterceptorNoOpException noOpException = null;
@@ -64,7 +76,7 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
             batchReqStr = this.dirJaxb2Marshaller.marshal(this.objectFactory.createBatchRequest(batchReq));
             input = getClass().getClassLoader().getResourceAsStream("federationinfo.properties");
 			prop.load(input);
-			//iheoid = prop.getProperty("ihefederationoid");
+			iheoid = prop.getProperty("ihefederationoid");
         } catch (DirectoryInterceptorNoOpException e) {
             noOpException = e;
         } catch (DirectoryInterceptorException e) {
@@ -105,7 +117,29 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
         return fedBatchResp;
     }
 
+    // TODO: improve error handling
+    @Override
+    protected void addError(String fedDirId, String reqId, BatchResponse fedBatchResp, Throwable th) {
+        fedBatchResp.getBatchResponses().add(
+                this.objectFactory.createBatchResponseErrorResponse(this.errBuilder.buildErrorResponse(reqId, ErrorType.OTHER, th)));
+    }
 
+    /**
+	 *
+	 * @param batchRequest
+	 * @return Control
+	 */
+//	private Control buildSearchResultEntryMetadaCtrl(BatchRequest batchRequest) {
+//		Control ctrl = new Control();
+//		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.7");
+//		ctrl.setCriticality(false);
+//		SearchResultEntryMetadata oSearchResultEntryMetadata = this.objectFactory.createSearchResultEntryMetadata();
+//		oSearchResultEntryMetadata.setDirectoryId(dirStaticId);
+//		oSearchResultEntryMetadata.setDirectoryURI(staticWsdlUrl);
+//		//ctrl.setControlValue(new String(convertSearchResultEntryMetadataToBytes(oSearchResultEntryMetadata)));
+//		ctrl.setControlValue(oSearchResultEntryMetadata);
+//		return ctrl;
+//	}
     private Control buildSearchResultEntryMetadaCtrl(BatchRequest batchRequest) {
 		Control ctrl = new Control();
 		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.7");
@@ -128,7 +162,27 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
 		}
 		return ctrl;
 	}
-
+	
+	/**
+	 *
+	 * @param batchRequest
+	 * @return Control
+	 */
+//	private Control buildFederatedResponseDataCtrl(BatchRequest batchRequest) {
+//
+//		Control ctrl = new Control();
+//		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.8");
+//		ctrl.setCriticality(false);
+//		FederatedSearchResponseData oFederatedSearchResponseData = this.objectFactory.createFederatedSearchResponseData();
+//		FederatedResponseStatus oStatus = this.objectFactory.createFederatedResponseStatus();
+//		oStatus.setDirectoryId(dirStaticId);
+//		//oStatus.setFederatedRequestId(iheoid);
+//		oStatus.setResultMessage("Success");
+//		oFederatedSearchResponseData.setFederatedResponseStatus(oStatus);
+//		//String marshalledString = this.dirJaxb2Marshaller.marshal(this.objectFactory.createFederatedSearchResponseData(oFederatedSearchResponseData));
+//		ctrl.setControlValue(oFederatedSearchResponseData);
+//		return ctrl;
+//	}
 	
 	private Control buildFederatedResponseDataCtrl(BatchRequest batchRequest) {
 
@@ -192,5 +246,17 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
         this.fedDirs = fedDirs;
     }
 
-    
+    @Autowired(required = false)
+    @DirectoryStandard(DirectoryStandardId.IHE)
+    @Override
+    protected void setFederatedRequestInterceptors(SortedSet<DirectoryRequestInterceptor<BatchRequest, BatchResponse>> fedReqInterceptors) {
+        this.fedReqInterceptors = fedReqInterceptors;
+    }
+
+    @Autowired(required = false)
+    @DirectoryStandard(DirectoryStandardId.IHE)
+    @Override
+    protected void setFederatedResponseInterceptors(SortedSet<DirectoryResponseInterceptor<BatchRequest, BatchResponse>> fedRespInterceptors) {
+        this.fedRespInterceptors = fedRespInterceptors;
+    }
 }

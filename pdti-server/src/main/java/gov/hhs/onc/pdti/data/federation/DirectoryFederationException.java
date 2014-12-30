@@ -1,4 +1,4 @@
-package gov.hhs.onc.pdti.service.exception;
+package gov.hhs.onc.pdti.data.federation;
 
 import gov.hhs.onc.pdti.data.DirectoryDataException;
 
