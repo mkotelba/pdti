@@ -4,15 +4,13 @@ import gov.hhs.onc.pdti.ws.api.BatchRequest;
 import gov.hhs.onc.pdti.ws.api.BatchResponse;
 import gov.hhs.onc.pdti.ws.api.DsmlMessage;
 import gov.hhs.onc.pdti.ws.api.ErrorResponse;
-
+import gov.hhs.onc.pdti.ws.api.SearchResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
@@ -35,6 +33,7 @@ public abstract class DirectoryUtils {
     }
 
     public static BatchResponse setRequestId(BatchResponse batchResp, String reqId) {
+        SearchResponse searchRespMsg;
 
         batchResp.setRequestId(reqId);
 
@@ -43,7 +42,11 @@ public abstract class DirectoryUtils {
                 ((DsmlMessage) batchRespItem.getValue()).setRequestId(reqId);
             } else if (ErrorResponse.class.isAssignableFrom(batchRespItem.getDeclaredType())) {
                 ((ErrorResponse) batchRespItem.getValue()).setRequestId(reqId);
-            } 
+            } else if (SearchResponse.class.isAssignableFrom(batchRespItem.getDeclaredType())) {
+                searchRespMsg = (SearchResponse) batchRespItem.getValue();
+                searchRespMsg.setRequestId(reqId);
+                searchRespMsg.getSearchResultDone().setRequestId(reqId);
+            }
         }
 
         return batchResp;
