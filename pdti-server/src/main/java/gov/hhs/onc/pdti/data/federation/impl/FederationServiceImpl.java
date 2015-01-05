@@ -129,17 +129,6 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
 	 * @param batchRequest
 	 * @return Control
 	 */
-//	private Control buildSearchResultEntryMetadaCtrl(BatchRequest batchRequest) {
-//		Control ctrl = new Control();
-//		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.7");
-//		ctrl.setCriticality(false);
-//		SearchResultEntryMetadata oSearchResultEntryMetadata = this.objectFactory.createSearchResultEntryMetadata();
-//		oSearchResultEntryMetadata.setDirectoryId(dirStaticId);
-//		oSearchResultEntryMetadata.setDirectoryURI(staticWsdlUrl);
-//		//ctrl.setControlValue(new String(convertSearchResultEntryMetadataToBytes(oSearchResultEntryMetadata)));
-//		ctrl.setControlValue(oSearchResultEntryMetadata);
-//		return ctrl;
-//	}
     private Control buildSearchResultEntryMetadaCtrl(BatchRequest batchRequest) {
 		Control ctrl = new Control();
 		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.7");
@@ -168,22 +157,6 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
 	 * @param batchRequest
 	 * @return Control
 	 */
-//	private Control buildFederatedResponseDataCtrl(BatchRequest batchRequest) {
-//
-//		Control ctrl = new Control();
-//		ctrl.setType("1.3.6.1.4.1.19376.1.2.4.4.8");
-//		ctrl.setCriticality(false);
-//		FederatedSearchResponseData oFederatedSearchResponseData = this.objectFactory.createFederatedSearchResponseData();
-//		FederatedResponseStatus oStatus = this.objectFactory.createFederatedResponseStatus();
-//		oStatus.setDirectoryId(dirStaticId);
-//		//oStatus.setFederatedRequestId(iheoid);
-//		oStatus.setResultMessage("Success");
-//		oFederatedSearchResponseData.setFederatedResponseStatus(oStatus);
-//		//String marshalledString = this.dirJaxb2Marshaller.marshal(this.objectFactory.createFederatedSearchResponseData(oFederatedSearchResponseData));
-//		ctrl.setControlValue(oFederatedSearchResponseData);
-//		return ctrl;
-//	}
-	
 	private Control buildFederatedResponseDataCtrl(BatchRequest batchRequest) {
 
 		Control ctrl = new Control();
