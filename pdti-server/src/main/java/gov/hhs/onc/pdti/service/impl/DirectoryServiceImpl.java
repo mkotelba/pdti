@@ -237,6 +237,8 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 					LOGGER.debug(ctrl.getType());
 					LOGGER.trace("isFederatedRequest = " + isFederatedRequest);
 				}
+			}else {
+				isFederatedRequest = false;
 			}
 		}
 		return isFederatedRequest;
