@@ -19,14 +19,14 @@ import org.springframework.stereotype.Service;
 @Scope("singleton")
 @Service("providerInfoDir")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-@WebService(portName = "ProviderInformationDirectory_Port_Soap", serviceName = "ProviderInformationDirectory_Service", targetNamespace = "urn:ihe:iti:hpd:2010")
+@WebService(wsdlLocation = "META-INF/wsdl/HPD_ProviderInformationDirectory.wsdl", serviceName = "ProviderInformationDirectory_Service", targetNamespace = "urn:ihe:iti:hpd:2010", portName = "ProviderInformationDirectory_Port_Soap")
 public class ProviderInformationDirectoryImpl extends AbstractProviderInformationDirectory<BatchRequest, BatchResponse> implements
         ProviderInformationDirectoryPortType {
     @Override
-    @WebMethod(operationName = "ProviderInformationQueryRequest", action = "urn:ihe:iti:hpd:2010:ProviderInformationQueryRequest")
-    @WebResult(name = "batchResponse", targetNamespace = "urn:oasis:names:tc:DSML:2:0:core", partName = "queryResponse")
+    @WebMethod(operationName = "ProviderInformationQueryRequest")
+    @WebResult(name = "batchResponse")
     public BatchResponse providerInformationQueryRequest(
-            @WebParam(name = "batchRequest", targetNamespace = "urn:oasis:names:tc:DSML:2:0:core", partName = "queryRequest") BatchRequest queryRequest) {
+            @WebParam(name = "batchRequest") BatchRequest queryRequest) {
         return this.dirService.processRequest(queryRequest);
     }
 

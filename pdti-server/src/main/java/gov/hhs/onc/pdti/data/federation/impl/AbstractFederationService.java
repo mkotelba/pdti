@@ -11,15 +11,20 @@ import gov.hhs.onc.pdti.interceptor.DirectoryInterceptor;
 import gov.hhs.onc.pdti.interceptor.DirectoryInterceptorException;
 import gov.hhs.onc.pdti.interceptor.DirectoryRequestInterceptor;
 import gov.hhs.onc.pdti.interceptor.DirectoryResponseInterceptor;
+import gov.hhs.onc.pdti.jaxb.DirectoryJaxb2Marshaller;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 
 public abstract class AbstractFederationService<T, U> implements FederationService<T, U> {
+	@Autowired
+    protected DirectoryJaxb2Marshaller dirJaxb2Marshaller;
     @Autowired
     protected DirectoryErrorBuilder errBuilder;
 
