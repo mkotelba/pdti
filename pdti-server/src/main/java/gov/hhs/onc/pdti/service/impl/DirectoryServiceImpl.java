@@ -61,7 +61,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 	private ObjectFactory objectFactory;
 	private static String dirStaticId = "";
 	private static String staticWsdlUrl = "";
-	private boolean isFederatedRequest = false;
 
 	@Autowired
 	PdtiAuditService pdtiAuditLogService;
@@ -110,32 +109,9 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 				}
 			}
 
-			if (noOpException != null) {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Skipping processing of DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + "):\n" + batchReqStr,
-							noOpException);
-				} else if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Skipping processing of DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + ").", noOpException);
-				}
-			} else {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Processing DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + "):\n" + batchReqStr);
-				} else if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Processing DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + ").");
-				}
-				getFederatedRequestId(batchReq);
-				//If Federation is enabled, then a local ldap call and Federation both should happen.. 
-				//In the else part only local Directory will be searched.
-				if (isFederatedRequest) {
-					if (this.dataServices != null) {
-						for (DirectoryDataService<?> dataService : this.dataServices) {
-							try {
-								combineBatchResponses(batchResp, dataService.processData(batchReq));
-							} catch (Throwable th) {
-								this.addError(dirId, reqId, batchResp, th);
-							}
-						}
-					}
+			if (noOpException == null) {
+				queryLocalLdap(batchReq, dirId, reqId, batchResp);
+				if (isFederatedRequest(batchReq)) {	
 					try {
 						combineFederatedBatchResponses(batchResp, batchReq);
 						for (BatchResponse batchRespCombineItem : this.fedService.federate(batchReq)) {
@@ -144,18 +120,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 					} catch (Throwable th) {
 						isError = true;
 						this.addError(dirId, reqId, batchResp, th);
-					}
-				} else {
-					// Call Local LDAP Directory...
-					LOGGER.info("Inside Local Directory Call...");
-					if (this.dataServices != null) {
-						for (DirectoryDataService<?> dataService : this.dataServices) {
-							try {
-								combineBatchResponses(batchResp, dataService.processData(batchReq));
-							} catch (Throwable th) {
-								this.addError(dirId, reqId, batchResp, th);
-							}
-						}
 					}
 				}
 			}
@@ -191,6 +155,19 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 		return batchResp;
 	}
 
+	private void queryLocalLdap(BatchRequest batchReq, String dirId,
+			String reqId, BatchResponse batchResp) {
+		if (this.dataServices != null) {
+			for (DirectoryDataService<?> dataService : this.dataServices) {
+				try {
+					combineBatchResponses(batchResp, dataService.processData(batchReq));
+				} catch (Throwable th) {
+					this.addError(dirId, reqId, batchResp, th);
+				}
+			}
+		}
+	}
+
 	/**
 	 *
 	 * @param batchResp
@@ -220,28 +197,21 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 	 * @param batchReq
 	 * @return boolean
 	 */
-	private boolean getFederatedRequestId(BatchRequest batchReq) {
+	private boolean isFederatedRequest(BatchRequest batchReq) {
 		if (null != batchReq && null != batchReq.getBatchRequests() && batchReq.getBatchRequests().size() > 0) {
 			DsmlMessage dsml = batchReq.getBatchRequests().get(0);
 			if (null != dsml && null != dsml.getControl() && dsml.getControl().size() > 0) {
 				Control ctrl = dsml.getControl().get(0);
 				if (null != dsml.getControl().get(0).getControlValue()) {
 					if(ctrl.getType().equals(iheoid)) {
-						isFederatedRequest = true;
+						return true;
 					}
 				}
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace(ctrl.getType());
-					LOGGER.trace("isFederatedRequest = " + isFederatedRequest);
-				} else if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug(ctrl.getType());
-					LOGGER.trace("isFederatedRequest = " + isFederatedRequest);
-				}
 			}else {
-				isFederatedRequest = false;
+				return false;
 			}
 		}
-		return isFederatedRequest;
+		return false;
 	}
 
 	@Override
