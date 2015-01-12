@@ -404,12 +404,9 @@ m-may: credentialIssueDate
 m-may: credentialRenewalDate
 m-may: credentialStatus
 m-may: credentialDescription
-m-may: hpdHasAnOrg
-m-may: hpdHasAProvider
 m-must: credentialName
 m-must: credentialNumber
 m-must: credentialType
-m-must: hpdCredentialId
 m-name: HPDProviderCredential
 m-supobjectclass: top
 
@@ -436,7 +433,7 @@ m-may: facsimileTelephoneNumber
 m-may: mobile
 m-may: pager
 m-may: mail
-m-may: hpdHasAProvider
+m-must: hpdHasAProvider
 #m-may: hpdHasASubOrg
 m-must: hpdMemberId
 m-must: hpdHasAnOrg
