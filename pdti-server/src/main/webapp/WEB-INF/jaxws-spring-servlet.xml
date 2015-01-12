@@ -63,6 +63,7 @@
             <util:list>
                 <beans:value>classpath*:META-INF/schema/DSML/DSMLv2.xsd</beans:value>
                 <beans:value>classpath*:META-INF/schema/HPD/HPD.xsd</beans:value>
+                <beans:value>classpath*:META-INF/schema/HPD/HPDFederatedStructures.xsd</beans:value>
             </util:list>
         </beans:property>
     </beans:bean>
