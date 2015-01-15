@@ -26,10 +26,8 @@ import gov.hhs.onc.pdti.ws.api.ObjectFactory;
 import gov.hhs.onc.pdti.ws.api.SearchResponse;
 import gov.hhs.onc.pdti.ws.api.SearchResultEntryMetadata;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
@@ -286,29 +284,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 			e.printStackTrace();
 		}
 		return ctrl;
-	}
-
-	private static byte[] convertFederatedSearchResponseToBytes(String fedSearchResp) {
-		return convertToBytes(fedSearchResp);
-	}
-
-	private static byte[] convertSearchResultEntryMetadataToBytes(SearchResultEntryMetadata searchResMetadata) {
-		return convertToBytes(searchResMetadata);
-	}
-
-	/**
-	 *
-	 * @param resData
-	 * @return byte
-	 */
-	private static byte[] convertToBytes(Object resData) {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			new ObjectOutputStream(bos).writeObject(resData);
-		} catch (IOException e) {
-			LOGGER.error(e);
-		} 
-		return Base64.encodeBase64(bos.toByteArray());
 	}
 
 	@Autowired
