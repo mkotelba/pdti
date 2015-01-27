@@ -4,6 +4,7 @@ import gov.hhs.onc.pdti.DirectoryStandard;
 import gov.hhs.onc.pdti.DirectoryStandardId;
 import gov.hhs.onc.pdti.DirectoryType;
 import gov.hhs.onc.pdti.DirectoryTypeId;
+import gov.hhs.onc.pdti.data.DirectoryDataException;
 import gov.hhs.onc.pdti.data.DirectoryDataService;
 import gov.hhs.onc.pdti.data.DirectoryDescriptor;
 import gov.hhs.onc.pdti.data.federation.FederationService;
@@ -218,9 +219,17 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 		batchResp.getBatchResponses().add(this.objectFactory.createBatchResponseErrorResponse(this.errBuilder.buildErrorResponse(reqId, ErrorType.OTHER, th)));
 	}
 
-	private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) {
+	private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) throws DirectoryDataException {
+		int responseCount = 0;
 		for (BatchResponse batchRespCombineItem : batchRespCombine) {
-			batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+			if (batchRespCombineItem.getBatchResponses().get(responseCount).getValue() instanceof SearchResponse) {
+				if(((SearchResponse) batchRespCombineItem.getBatchResponses().get(responseCount).getValue()).getSearchResultEntry().isEmpty()){
+					throw new DirectoryDataException("No results");
+				}else {
+					batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+				}
+			}
+			responseCount ++;
 		}
 	}
 
