@@ -17,10 +17,19 @@ import gov.hhs.onc.pdti.ws.api.BatchResponse;
 import gov.hhs.onc.pdti.ws.api.ErrorResponse.ErrorType;
 import gov.hhs.onc.pdti.ws.api.ObjectFactory;
 import gov.hhs.onc.pdti.ws.api.ProviderInformationDirectoryService;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
+
+import javax.annotation.Resource;
+import javax.xml.ws.handler.Handler;
+import javax.xml.ws.handler.HandlerResolver;
+import javax.xml.ws.handler.PortInfo;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +42,10 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
     @Autowired
     @DirectoryStandard(DirectoryStandardId.IHE)
     private ObjectFactory objectFactory;
-
+    
+    @Resource
+	ApplicationContext appContext;
+    
     @Override
     public BatchResponse federate(DirectoryDescriptor fedDir, BatchRequest batchReq) throws DirectoryFederationException {
         String fedDirId = fedDir.getDirectoryId(), reqId = batchReq.getRequestId();
@@ -54,7 +66,17 @@ public class FederationServiceImpl extends AbstractFederationService<BatchReques
         } else {
             try {
                 ProviderInformationDirectoryService fedDirService = new ProviderInformationDirectoryService(fedDir.getWsdlLocation());
-
+                fedDirService.setHandlerResolver(new HandlerResolver() {
+                	String actionHeaderValue = ((SoapHeaderProperties)appContext.getBean("headerProperties")).getAction();
+                	String toHeaderValue = ((SoapHeaderProperties)appContext.getBean("headerProperties")).getTo();
+                	String replyToHeaderValue = ((SoapHeaderProperties)appContext.getBean("headerProperties")).getReplyTo();
+                	String messageIdHeaderValue = ((SoapHeaderProperties)appContext.getBean("headerProperties")).getMessageId();
+                    public List<Handler> getHandlerChain(PortInfo portInfo) {
+                        List<Handler> handlerList = new ArrayList<Handler>();
+                        handlerList.add(new FederatedRequestSoapHeaderHandler(actionHeaderValue, toHeaderValue, replyToHeaderValue, messageIdHeaderValue));
+                        return handlerList;
+                    }
+                });
                 fedBatchResp = fedDirService.getProviderInformationDirectoryPortSoap().providerInformationQueryRequest(fedBatchReq);
             } catch (Throwable th) {
                 this.addError(fedDirId, reqId, fedBatchResp, th);
