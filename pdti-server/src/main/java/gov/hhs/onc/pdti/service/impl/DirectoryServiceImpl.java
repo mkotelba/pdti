@@ -4,6 +4,7 @@ import gov.hhs.onc.pdti.DirectoryStandard;
 import gov.hhs.onc.pdti.DirectoryStandardId;
 import gov.hhs.onc.pdti.DirectoryType;
 import gov.hhs.onc.pdti.DirectoryTypeId;
+import gov.hhs.onc.pdti.data.DirectoryDataException;
 import gov.hhs.onc.pdti.data.DirectoryDataService;
 import gov.hhs.onc.pdti.data.DirectoryDescriptor;
 import gov.hhs.onc.pdti.data.federation.FederationService;
@@ -26,10 +27,8 @@ import gov.hhs.onc.pdti.ws.api.ObjectFactory;
 import gov.hhs.onc.pdti.ws.api.SearchResponse;
 import gov.hhs.onc.pdti.ws.api.SearchResultEntryMetadata;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
@@ -220,9 +219,17 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 		batchResp.getBatchResponses().add(this.objectFactory.createBatchResponseErrorResponse(this.errBuilder.buildErrorResponse(reqId, ErrorType.OTHER, th)));
 	}
 
-	private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) {
+	private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) throws DirectoryDataException {
+		int responseCount = 0;
 		for (BatchResponse batchRespCombineItem : batchRespCombine) {
-			batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+			if (batchRespCombineItem.getBatchResponses().get(responseCount).getValue() instanceof SearchResponse) {
+				if(((SearchResponse) batchRespCombineItem.getBatchResponses().get(responseCount).getValue()).getSearchResultEntry().isEmpty()){
+					throw new DirectoryDataException("No results");
+				}else {
+					batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+				}
+			}
+			responseCount ++;
 		}
 	}
 
@@ -286,29 +293,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 			e.printStackTrace();
 		}
 		return ctrl;
-	}
-
-	private static byte[] convertFederatedSearchResponseToBytes(String fedSearchResp) {
-		return convertToBytes(fedSearchResp);
-	}
-
-	private static byte[] convertSearchResultEntryMetadataToBytes(SearchResultEntryMetadata searchResMetadata) {
-		return convertToBytes(searchResMetadata);
-	}
-
-	/**
-	 *
-	 * @param resData
-	 * @return byte
-	 */
-	private static byte[] convertToBytes(Object resData) {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			new ObjectOutputStream(bos).writeObject(resData);
-		} catch (IOException e) {
-			LOGGER.error(e);
-		} 
-		return Base64.encodeBase64(bos.toByteArray());
 	}
 
 	@Autowired
