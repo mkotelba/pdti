@@ -35,6 +35,18 @@
     <!-- Enabling annotation driven Spring web services -->
     <sws:annotation-driven marshaller="dirJaxb2Marshaller" unmarshaller="dirJaxb2Marshaller"/>
     
+    <beans:bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+    <beans:property name="scopes">
+        <beans:map>
+            <beans:entry key="thread">
+                <beans:bean class="org.springframework.context.support.SimpleThreadScope" />
+            </beans:entry>
+        </beans:map>
+    </beans:property>
+	</beans:bean>
+	
+	<beans:bean id="headerProperties" class="gov.hhs.onc.pdti.data.federation.impl.SoapHeaderProperties" scope="thread" />
+    
     <!-- Defining custom Spring conversion service -->
     <beans:bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <beans:property name="converters">

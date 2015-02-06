@@ -4,6 +4,7 @@ import gov.hhs.onc.pdti.DirectoryStandard;
 import gov.hhs.onc.pdti.DirectoryStandardId;
 import gov.hhs.onc.pdti.DirectoryType;
 import gov.hhs.onc.pdti.DirectoryTypeId;
+import gov.hhs.onc.pdti.data.DirectoryDataException;
 import gov.hhs.onc.pdti.data.DirectoryDataService;
 import gov.hhs.onc.pdti.data.DirectoryDescriptor;
 import gov.hhs.onc.pdti.data.federation.FederationService;
@@ -26,10 +27,8 @@ import gov.hhs.onc.pdti.ws.api.ObjectFactory;
 import gov.hhs.onc.pdti.ws.api.SearchResponse;
 import gov.hhs.onc.pdti.ws.api.SearchResultEntryMetadata;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +60,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 	private ObjectFactory objectFactory;
 	private static String dirStaticId = "";
 	private static String staticWsdlUrl = "";
-	private boolean isFederatedRequest = false;
 
 	@Autowired
 	PdtiAuditService pdtiAuditLogService;
@@ -110,32 +108,9 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 				}
 			}
 
-			if (noOpException != null) {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Skipping processing of DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + "):\n" + batchReqStr,
-							noOpException);
-				} else if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Skipping processing of DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + ").", noOpException);
-				}
-			} else {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Processing DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + "):\n" + batchReqStr);
-				} else if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Processing DSML batch request (directoryId=" + dirId + ", requestId=" + reqId + ").");
-				}
-				getFederatedRequestId(batchReq);
-				//If Federation is enabled, then a local ldap call and Federation both should happen.. 
-				//In the else part only local Directory will be searched.
-				if (isFederatedRequest) {
-					if (this.dataServices != null) {
-						for (DirectoryDataService<?> dataService : this.dataServices) {
-							try {
-								combineBatchResponses(batchResp, dataService.processData(batchReq));
-							} catch (Throwable th) {
-								this.addError(dirId, reqId, batchResp, th);
-							}
-						}
-					}
+			if (noOpException == null) {
+				queryLocalLdap(batchReq, dirId, reqId, batchResp);
+				if (isFederatedRequest(batchReq)) {	
 					try {
 						combineFederatedBatchResponses(batchResp, batchReq);
 						for (BatchResponse batchRespCombineItem : this.fedService.federate(batchReq)) {
@@ -144,18 +119,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 					} catch (Throwable th) {
 						isError = true;
 						this.addError(dirId, reqId, batchResp, th);
-					}
-				} else {
-					// Call Local LDAP Directory...
-					LOGGER.info("Inside Local Directory Call...");
-					if (this.dataServices != null) {
-						for (DirectoryDataService<?> dataService : this.dataServices) {
-							try {
-								combineBatchResponses(batchResp, dataService.processData(batchReq));
-							} catch (Throwable th) {
-								this.addError(dirId, reqId, batchResp, th);
-							}
-						}
 					}
 				}
 			}
@@ -191,6 +154,19 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 		return batchResp;
 	}
 
+	private void queryLocalLdap(BatchRequest batchReq, String dirId,
+			String reqId, BatchResponse batchResp) {
+		if (this.dataServices != null) {
+			for (DirectoryDataService<?> dataService : this.dataServices) {
+				try {
+					combineBatchResponses(batchResp, dataService.processData(batchReq));
+				} catch (Throwable th) {
+					this.addError(dirId, reqId, batchResp, th);
+				}
+			}
+		}
+	}
+
 	/**
 	 *
 	 * @param batchResp
@@ -220,28 +196,21 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 	 * @param batchReq
 	 * @return boolean
 	 */
-	private boolean getFederatedRequestId(BatchRequest batchReq) {
+	private boolean isFederatedRequest(BatchRequest batchReq) {
 		if (null != batchReq && null != batchReq.getBatchRequests() && batchReq.getBatchRequests().size() > 0) {
 			DsmlMessage dsml = batchReq.getBatchRequests().get(0);
 			if (null != dsml && null != dsml.getControl() && dsml.getControl().size() > 0) {
 				Control ctrl = dsml.getControl().get(0);
 				if (null != dsml.getControl().get(0).getControlValue()) {
 					if(ctrl.getType().equals(iheoid)) {
-						isFederatedRequest = true;
+						return true;
 					}
 				}
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace(ctrl.getType());
-					LOGGER.trace("isFederatedRequest = " + isFederatedRequest);
-				} else if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug(ctrl.getType());
-					LOGGER.trace("isFederatedRequest = " + isFederatedRequest);
-				}
 			}else {
-				isFederatedRequest = false;
+				return false;
 			}
 		}
-		return isFederatedRequest;
+		return false;
 	}
 
 	@Override
@@ -250,9 +219,17 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 		batchResp.getBatchResponses().add(this.objectFactory.createBatchResponseErrorResponse(this.errBuilder.buildErrorResponse(reqId, ErrorType.OTHER, th)));
 	}
 
-	private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) {
+	private static void combineBatchResponses(BatchResponse batchResp, List<BatchResponse> batchRespCombine) throws DirectoryDataException {
+		int responseCount = 0;
 		for (BatchResponse batchRespCombineItem : batchRespCombine) {
-			batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+			if (batchRespCombineItem.getBatchResponses().get(responseCount).getValue() instanceof SearchResponse) {
+				if(((SearchResponse) batchRespCombineItem.getBatchResponses().get(responseCount).getValue()).getSearchResultEntry().isEmpty()){
+					throw new DirectoryDataException("No results");
+				}else {
+					batchResp.getBatchResponses().addAll(batchRespCombineItem.getBatchResponses());
+				}
+			}
+			responseCount ++;
 		}
 	}
 
@@ -316,29 +293,6 @@ public class DirectoryServiceImpl extends AbstractDirectoryService<BatchRequest,
 			e.printStackTrace();
 		}
 		return ctrl;
-	}
-
-	private static byte[] convertFederatedSearchResponseToBytes(String fedSearchResp) {
-		return convertToBytes(fedSearchResp);
-	}
-
-	private static byte[] convertSearchResultEntryMetadataToBytes(SearchResultEntryMetadata searchResMetadata) {
-		return convertToBytes(searchResMetadata);
-	}
-
-	/**
-	 *
-	 * @param resData
-	 * @return byte
-	 */
-	private static byte[] convertToBytes(Object resData) {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			new ObjectOutputStream(bos).writeObject(resData);
-		} catch (IOException e) {
-			LOGGER.error(e);
-		} 
-		return Base64.encodeBase64(bos.toByteArray());
 	}
 
 	@Autowired

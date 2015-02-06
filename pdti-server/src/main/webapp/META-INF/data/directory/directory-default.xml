@@ -32,11 +32,4 @@
         <beans:qualifier type="gov.hhs.onc.pdti.DirectoryType" value="MAIN"/>
     </beans:bean>
     
-    <beans:bean id="hpdPlusDirDefault" class="gov.hhs.onc.pdti.data.impl.DirectoryDescriptorImpl" parent="mainDir"
-        p:directoryId="pdti-hpdplus-dir_#{ new java.util.Date().time }"
-        p:baseDn="o=dev.provider-directories.com,dc=hpd"
-        p:wsdlLocation="http://localhost:8080#{ servletContext.contextPath }/Hpd_Plus_ProviderInformationDirectoryService?wsdl">
-        <beans:qualifier type="gov.hhs.onc.pdti.DirectoryStandard" value="HPD_PLUS_PROPOSED"/>
-        <beans:qualifier type="gov.hhs.onc.pdti.DirectoryType" value="MAIN"/>
-    </beans:bean>
 </beans:beans>
