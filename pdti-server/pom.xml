@@ -32,6 +32,7 @@
 
 	<properties>
 		<spring.data.version>1.7.1.RELEASE</spring.data.version>
+		<federation.id>1.3.6.1.4.1.19376.1.2.4.4.6</federation.id>
 	</properties>
 
 	<dependencies>
@@ -212,6 +213,17 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<targetPath>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</targetPath>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -302,6 +314,12 @@
 	</build>
 
 	<profiles>
+		<profile>
+			<id>nonfederated</id>
+			<properties>
+				<federation.id>none</federation.id>
+			</properties>
+		</profile>
 		<!-- Allow for optional running of integration tests against temporary 
 			LDAP and server instances -->
 		<profile>
